@@ -2,6 +2,8 @@
 
 Laker Educationally Accessible Game Understanding Engine is an engine built on top of PyGame to teach basic game development aspects.
 
+Code for this engine is written to mirror pseudocode in *Game Programming Algorithms and Techniques* by Madhav.
+
 Note that this was designed with education in mind.  Therefore optimization is not of the essence.  We will not (for instance) use concepts like DirtySprites or updating only parts of the screen, relying instead upon a more traditional (easier to understand albeit less optimal) approach.  This may mean renaming certain pygame concepts to keep closer to the textbook code.
 
 **Be sure you are using Python 3.**
