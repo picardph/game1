@@ -1,6 +1,6 @@
 # L.E.A.G.U.E.
 
-Laker Educationally Accessible Game Understanding Engine is an engine built on top of PyGame to teach basic 2D game development aspects.
+Laker Educationally Accessible Game Understanding Engine is an engine built on top of PyGame to teach basic game development aspects.
 
 # Classes
 
