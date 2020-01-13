@@ -1,5 +1,9 @@
 from settings import Settings
-from graphics import SpriteSheet
+from graphics import Spritesheet
+
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
 
 class Engine:
     """Engine is the definition of our game engine.  We want it to
@@ -81,7 +85,7 @@ class GameObject(abc.ABC):
     """Any object that makes up our game world."""
     pass
 
-class Drawable():
+class Drawable(pygame.sprite.Sprite):
     """An interface that specifies an object must have a draw() method."""
     def __init__(self, layer=0):
         self.layer = layer
