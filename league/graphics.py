@@ -1,5 +1,35 @@
+import pygame
 
-class SpriteSheet:
+class Tilemap:
+    """An object that represents an MxN list of tiles.  Give x, y
+    returns various pieces of information about that tile, such as
+    the image to draw, etc.
+
+    Fields:
+    spritesheet - The spritesheet from which to get the images for the tiles.
+    tile_size - The number of pixels wide and high (we are forcing squares) per tile.
+    wide - The number of tiles wide the map holds.
+    high - The number of tiles vertically the map holds.
+    world - The MxN list of tile numbers.
+    """
+    def __init__(self, path, spritesheet, wide, high, tile_size = Settings.tile_size):
+        self.path = path
+        self.spritesheet = spritesheet
+        self.wide = wide
+        self.high = high
+        self.tile_size = tile_size
+        self.world = []
+
+    def __parse(self):
+        with open(self.path, 'r') as f:
+            reader = csv.reader(f)
+            contents = list(reader)
+        self.wide = contents[0]
+        self.high = contents[1]
+        self.world = contents[2:]
+        
+
+class Spritesheet:
     """An object that represents a spritesheet and provides
     methods to access individual sprites from it.
 
@@ -37,10 +67,11 @@ class SpriteSheet:
 
     def __get_image_num(self, num):
         # This function copies an MxM image from x, y
-        # to a new image and returns it.
+        # to a new Sprite and returns it.
         y = self.tile_size * (num // self.per_row)
         x = self.tile_size * (num % self.per_row)
-        image = pygame.Surface((self.tile_size, self.tile_size))
-        image.blit(self.sheet, (0, 0), (x, y, x + self.tile_size, y + self.tile_size))
-        return image
+        sprite = Sprite()
+        sprite.image = pygame.Surface((self.tile_size, self.tile_size))
+        sprite.image.blit(self.sheet, (0, 0), (x, y, x + self.tile_size, y + self.tile_size))
+        return sprite
 
