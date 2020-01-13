@@ -83,8 +83,8 @@ class GameObject(abc.ABC):
 
 class Drawable():
     """An interface that specifies an object must have a draw() method."""
-    def __init__(self, z=0):
-        self.z = z
+    def __init__(self, layer=0):
+        self.layer = layer
 
     @abc.abstractmethod
     def draw():
