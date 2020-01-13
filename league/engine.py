@@ -57,7 +57,7 @@ class Engine:
             self.gameDeltaTime = self.realDeltaTime * Settings.gameTimeFactor
 
             # Process inputs
-            self.handleInputs()
+            self.handle_inputs()
 
             # Update game world
             # Each object must have an update(time) method
@@ -70,3 +70,31 @@ class Engine:
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
+
+    def handle_inputs(self):
+        pass
+
+
+import abc
+
+class GameObject:
+    pass
+
+class Drawable(abc.ABC):
+    @abc.abstractmethod
+    def draw():
+        pass
+
+class Updateable(abc.ABC):
+    @abc.abstractmethod
+    def update(gameDeltaTime):
+        pass
+
+class UGameObject(GameObject, Updateable):
+    pass
+
+class DGameObject(GameObject, Drawable):
+    pass
+
+class DUGameObject(UGameObject, Drawable):
+    pass
