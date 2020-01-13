@@ -81,8 +81,11 @@ class GameObject(abc.ABC):
     """Any object that makes up our game world."""
     pass
 
-class Drawable(abc.ABC):
+class Drawable():
     """An interface that specifies an object must have a draw() method."""
+    def __init__(self, z=0):
+        self.z = z
+
     @abc.abstractmethod
     def draw():
         pass
