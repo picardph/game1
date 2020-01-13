@@ -9,11 +9,15 @@ class Settings:
     key_repeat - How quickly (in milliseconds) to wait before allowing a key to repeat.
     width - The width of the screen in pixels.
     height - The height of the screen in pixels.
+    tile_size - The default tile_size for sprites
+    gameTimeFactor - Controls how real time relates to game time.
     """
     fps = 30
     key_repeat = 50
     width = 800
     height = 640
+    tile_size = 32
+    gameTimeFactor = 1
 
 from enum import IntEnum
 class State(IntEnum):
