@@ -14,6 +14,7 @@ class Tilemap:
     wide - The number of tiles wide the map holds.
     high - The number of tiles vertically the map holds.
     world - The MxN list of tile numbers.
+    sprites - The sprites for drawing the world.
     """
     def __init__(self, path, spritesheet, wide, high, tile_size = Settings.tile_size):
         self.path = path
@@ -22,6 +23,8 @@ class Tilemap:
         self.high = high
         self.tile_size = tile_size
         self.world = []
+        self.sprites = []
+        self.__parse()
 
     def __parse(self):
         with open(self.path, 'r') as f:
@@ -30,7 +33,18 @@ class Tilemap:
         self.wide = contents[0]
         self.high = contents[1]
         self.world = contents[2:]
-        
+        a = 0
+        for i in self.world:
+            b = 0
+            for j in i:
+                x = b * self.spritesheet.tile_size
+                y = a * self.spritesheet.tile_size
+                sprite.image = self.spritesheet.sprites[a * self.spritesheet.per_row + b]
+                # Set rectangle coords
+                rect = sprite.image.get_rect()
+                rect.x = x
+                rect.y = y
+                self.sprites.append(sprite)
 
 class Spritesheet:
     """An object that represents a spritesheet and provides
