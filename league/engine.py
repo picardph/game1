@@ -45,14 +45,14 @@ class Engine:
         for i in range(pygame.joystick.get_count()):
             pygame.joystick.Joystick(i).init()
         # Set the repeat delay for key presses
-        pygame.key.set_repeat(Settings.repeat)
+        pygame.key.set_repeat(Settings.key_repeat)
 
     def get_window(self, title, width, height):
         """This function creates a new window and returns a reference to it."""
         # Set the title that will display at the top of the window.
         pygame.display.set_caption(title)
         # Create a window of the given dimensions and return it.
-        screen = pygame.display.set_mode(width, height)
+        screen = pygame.display.set_mode((width, height))
         return screen
 
     def run(self):
