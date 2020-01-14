@@ -1,7 +1,8 @@
-from settings import Settings
+from .settings import *
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pygame
+
+__all__ = ["Tilemap", "Spritesheet"]
 
 class Tilemap:
     """An object that represents an MxN list of tiles.  Give x, y
