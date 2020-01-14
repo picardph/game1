@@ -5,8 +5,6 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from .settings import *
 
-#__all__ = [ "Engine", "Drawable" ]
-
 class Engine:
     """Engine is the definition of our game engine.  We want it to
     be as game agnostic as possible, and will try to emulate code
@@ -14,6 +12,7 @@ class Engine:
     will be noted here.
 
     Fields:
+    title - The name of the game.
     running - Whether or not the engine is currently in the main game loop.
     clock - The real world clock for elapsed time.
     events - A dictionary of events and handling functions.
@@ -25,13 +24,13 @@ class Engine:
     """
 
     def __init__(self, title):
+        self.title = title
         self.running = False
         self.clock = pygame.time.Clock()
         self.events = {}
         self.objects = []
         self.drawables = []
-        self.screen = self.get_window(title, Settings.width, Settings.height)
-        self.init_pygame()
+        self.screen = None
         self.realDeltaTime = 0
 
     def init_pygame(self):
@@ -39,6 +38,8 @@ class Engine:
         including passing any specific settings to it."""
         # Startup the pygame system
         pygame.init()
+        # Set the title that will display at the top of the window.
+        pygame.display.set_caption(self.title)
         # Startup the joystick system
         pygame.joystick.init()
         # For each joystick we find, initialize the stick
@@ -46,17 +47,12 @@ class Engine:
             pygame.joystick.Joystick(i).init()
         # Set the repeat delay for key presses
         pygame.key.set_repeat(Settings.key_repeat)
-
-    def get_window(self, title, width, height):
-        """This function creates a new window and returns a reference to it."""
-        # Set the title that will display at the top of the window.
-        pygame.display.set_caption(title)
-        # Create a window of the given dimensions and return it.
-        screen = pygame.display.set_mode((width, height))
-        return screen
+        # Create our window
+        self.screen = pygame.display.set_mode((Settings.width, Settings.height))
 
     def run(self):
         """The main game loop.  As close to our book code as possible."""
+        self.running = True
         while self.running:
             # The time since the last check
             self.realDeltaTime = pygame.time.get_ticks() - self.realDeltaTime 
@@ -74,11 +70,23 @@ class Engine:
             for d in self.drawables:
                 d.draw()
 
+            pygame.display.flip()
+
             # Frame limiting code
             self.clock.tick(Settings.fps)
+    
+    def stop(self):
+        self.running = False
 
     def handle_inputs(self):
-        pass
+        for event in pygame.event.get():
+            #print(event)
+            if event.type in self.events.keys():
+                self.events[event.type]()
+            if event.type == pygame.KEYDOWN:
+                if event.key in self.key_events.keys():
+                    #print(event.key)
+                    self.key_events[event.key]() 
 
 
 class GameObject(abc.ABC):
