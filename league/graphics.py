@@ -21,10 +21,11 @@ class Tilemap:
     world - The MxN list of tile numbers.
     sprites - The sprites for drawing the world.
     """
-    def __init__(self, path, spritesheet, tile_size = Settings.tile_size):
+    def __init__(self, path, spritesheet, tile_size = Settings.tile_size, layer = 0):
         self.path = path
         self.spritesheet = spritesheet
         self.tile_size = tile_size
+        self.layer = layer
         self.world = []
         self.group = pygame.sprite.Group()
         self.__parse()
@@ -44,7 +45,7 @@ class Tilemap:
                 y = a * self.spritesheet.tile_size
                 #print(str(j) + " @ " + str(x) + ", " + str(y))
                 base_sprite = self.spritesheet.sprites[int(j)]
-                sprite = Drawable()
+                sprite = Drawable(self.layer)
                 sprite.image = base_sprite.image
                 # Set rectangle coords
                 rect = sprite.image.get_rect() 
@@ -97,4 +98,3 @@ class Spritesheet:
         sprite.image = pygame.Surface((self.tile_size, self.tile_size)).convert_alpha()
         sprite.image.blit(self.sheet, (0, 0), (x, y, x + self.tile_size, y + self.tile_size))
         return sprite
-

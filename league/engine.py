@@ -32,7 +32,7 @@ class Engine:
         self.key_events = {}
         self.key_events[Settings.overlay_key] = self.toggle_overlay
         self.objects = []
-        self.drawables = []
+        self.drawables = pygame.sprite.LayeredUpdates()
         self.screen = None
         self.realDeltaTime = 0
         self.visible_overlay = False
@@ -79,8 +79,8 @@ class Engine:
                 o.update(self.gameDeltaTime)
 
             # Generate outputs
-            for d in self.drawables:
-                d.draw(self.screen)
+            #d.update()
+            self.drawables.draw(self.screen)
 
             # Show overlay?
             if self.visible_overlay:
@@ -91,6 +91,8 @@ class Engine:
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
+    def add_group(self, group):
+        self.drawables.add(group.sprites())
 
     def toggle_overlay(self):
         self.visible_overlay = not self.visible_overlay
@@ -120,8 +122,8 @@ class GameObject(abc.ABC):
 class Drawable(pygame.sprite.Sprite):
     """Creates a drawable.  For us, a drawable is a pygame Sprite object."""
     def __init__(self, layer=0):
+        self._layer = layer
         super().__init__()
-        self.layer = layer
 
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""
