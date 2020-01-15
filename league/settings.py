@@ -1,3 +1,5 @@
+import pygame
+
 class Settings:
     """Settings exists to store default values used by the engine.
     These values will be class (static) variables, and are not final
@@ -22,6 +24,7 @@ class Settings:
     gameTimeFactor = 1
     fill_color = (255, 255, 255)
     overlay_color = (0, 0, 0)
+    overlay_key = pygame.K_BACKQUOTE
 
 from enum import IntEnum
 class State(IntEnum):
