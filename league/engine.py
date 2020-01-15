@@ -26,7 +26,7 @@ class Engine:
     def __init__(self, title):
         self.title = title
         self.running = False
-        self.clock = pygame.time.Clock()
+        self.clock = None 
         self.events = {}
         self.objects = []
         self.drawables = []
@@ -38,8 +38,12 @@ class Engine:
         including passing any specific settings to it."""
         # Startup the pygame system
         pygame.init()
+        # Create our window
+        self.screen = pygame.display.set_mode((Settings.width, Settings.height))
         # Set the title that will display at the top of the window.
         pygame.display.set_caption(self.title)
+        # Create the clock
+        self.clock = pygame.time.Clock()
         # Startup the joystick system
         pygame.joystick.init()
         # For each joystick we find, initialize the stick
@@ -47,8 +51,6 @@ class Engine:
             pygame.joystick.Joystick(i).init()
         # Set the repeat delay for key presses
         pygame.key.set_repeat(Settings.key_repeat)
-        # Create our window
-        self.screen = pygame.display.set_mode((Settings.width, Settings.height))
 
     def run(self):
         """The main game loop.  As close to our book code as possible."""
@@ -58,6 +60,9 @@ class Engine:
             self.realDeltaTime = pygame.time.get_ticks() - self.realDeltaTime 
             self.gameDeltaTime = self.realDeltaTime * Settings.gameTimeFactor
 
+            # Wipe screen
+            self.screen.fill(Settings.fill_color)
+            
             # Process inputs
             self.handle_inputs()
 
@@ -68,9 +73,14 @@ class Engine:
 
             # Generate outputs
             for d in self.drawables:
-                d.draw()
+                d.draw(self.screen)
 
+            font = self.font = pygame.font.Font(None,30)
+            fps = font.render("FPS: " + str(int(self.clock.get_fps())), True, Settings.overlay_color)
+            #print(self.clock.get_fps())
+            self.screen.blit(fps, (10, 10))
             pygame.display.flip()
+            #pygame.display.update()
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
@@ -94,13 +104,10 @@ class GameObject(abc.ABC):
     pass
 
 class Drawable(pygame.sprite.Sprite):
-    """An interface that specifies an object must have a draw() method."""
+    """Creates a drawable.  For us, a drawable is a pygame Sprite object."""
     def __init__(self, layer=0):
+        super().__init__()
         self.layer = layer
-
-    @abc.abstractmethod
-    def draw():
-        pass
 
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""

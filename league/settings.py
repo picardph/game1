@@ -11,6 +11,8 @@ class Settings:
     height - The height of the screen in pixels.
     tile_size - The default tile_size for sprites
     gameTimeFactor - Controls how real time relates to game time.
+    fill_color - The base window color.
+    overlay_color - Color to use for overlay text.
     """
     fps = 30
     key_repeat = 50
@@ -18,6 +20,8 @@ class Settings:
     height = 640
     tile_size = 32
     gameTimeFactor = 1
+    fill_color = (255, 255, 255)
+    overlay_color = (0, 0, 0)
 
 from enum import IntEnum
 class State(IntEnum):
