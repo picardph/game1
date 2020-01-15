@@ -16,6 +16,7 @@ class Settings:
     fill_color - The base window color.
     overlay_color - Color to use for overlay text.
     """
+    version = 0.9
     fps = 30
     key_repeat = 50
     width = 800

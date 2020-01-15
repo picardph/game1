@@ -21,6 +21,7 @@ class Engine:
     screen - The window we are drawing upon.
     realDeltaTime - How much clock time has passed since our last check.
     gameDeltaTime - How much game time has passed since our last check.
+    visible_overlay - Whether to show engine overlay statistics.
     """
 
     def __init__(self, title):
@@ -28,10 +29,14 @@ class Engine:
         self.running = False
         self.clock = None 
         self.events = {}
+        self.key_events = {}
+        self.key_events[Settings.overlay_key] = self.toggle_overlay
         self.objects = []
         self.drawables = []
         self.screen = None
         self.realDeltaTime = 0
+        self.visible_overlay = False
+        self.overlay_font = None
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -51,6 +56,8 @@ class Engine:
             pygame.joystick.Joystick(i).init()
         # Set the repeat delay for key presses
         pygame.key.set_repeat(Settings.key_repeat)
+        # Create overlay font
+        self.overlay_font = pygame.font.Font(None,30)
 
     def run(self):
         """The main game loop.  As close to our book code as possible."""
@@ -75,27 +82,34 @@ class Engine:
             for d in self.drawables:
                 d.draw(self.screen)
 
-            font = self.font = pygame.font.Font(None,30)
-            fps = font.render("FPS: " + str(int(self.clock.get_fps())), True, Settings.overlay_color)
-            #print(self.clock.get_fps())
-            self.screen.blit(fps, (10, 10))
+            # Show overlay?
+            if self.visible_overlay:
+                self.show_overlay()
+
+            # Could keep track of rectangles and update here, but eh.
             pygame.display.flip()
-            #pygame.display.update()
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
+
+    def toggle_overlay(self):
+        self.visible_overlay = not self.visible_overlay
+
+    def show_overlay(self):
+        overlay_string = "Version: " + str(Settings.version)
+        overlay_string = overlay_string +  " FPS: " + str(int(self.clock.get_fps()))
+        fps = self.overlay_font.render(overlay_string, True, Settings.overlay_color)
+        self.screen.blit(fps, (10, 10))
     
     def stop(self):
         self.running = False
 
     def handle_inputs(self):
         for event in pygame.event.get():
-            #print(event)
             if event.type in self.events.keys():
                 self.events[event.type]()
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
-                    #print(event.key)
                     self.key_events[event.key]() 
 
 
