@@ -1,6 +1,10 @@
 from .settings import *
+from .engine import *
+import csv
+import math
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
 
 __all__ = ["Tilemap", "Spritesheet"]
 
@@ -17,14 +21,12 @@ class Tilemap:
     world - The MxN list of tile numbers.
     sprites - The sprites for drawing the world.
     """
-    def __init__(self, path, spritesheet, wide, high, tile_size = Settings.tile_size):
+    def __init__(self, path, spritesheet, tile_size = Settings.tile_size):
         self.path = path
         self.spritesheet = spritesheet
-        self.wide = wide
-        self.high = high
         self.tile_size = tile_size
         self.world = []
-        self.sprites = []
+        self.group = pygame.sprite.Group()
         self.__parse()
 
     def __parse(self):
@@ -40,12 +42,18 @@ class Tilemap:
             for j in i:
                 x = b * self.spritesheet.tile_size
                 y = a * self.spritesheet.tile_size
-                sprite.image = self.spritesheet.sprites[a * self.spritesheet.per_row + b]
+                #print(str(j) + " @ " + str(x) + ", " + str(y))
+                base_sprite = self.spritesheet.sprites[int(j)]
+                sprite = Drawable()
+                sprite.image = base_sprite.image
                 # Set rectangle coords
-                rect = sprite.image.get_rect()
+                rect = sprite.image.get_rect() 
                 rect.x = x
                 rect.y = y
-                self.sprites.append(sprite)
+                sprite.rect = rect
+                self.group.add(sprite)
+                b = b + 1
+            a = a + 1
 
 class Spritesheet:
     """An object that represents a spritesheet and provides
@@ -75,21 +83,18 @@ class Spritesheet:
         # This function splits the sheet up into equal-sized chunks,
         # and returns a list of the chunks.
         sprites = []
-        count = 0
-        for i in range(height // self.tile_size):
-            for j in range(width // self.tile.size):
-                image = self.__get_image_num(count)
+        for i in range((self.width * self.height) // (Settings.tile_size * Settings.tile_size)):
+                image = self.__get_image_num(i)
                 sprites.append(image)
-                count = count + 1
         return sprites
 
     def __get_image_num(self, num):
         # This function copies an MxM image from x, y
         # to a new Sprite and returns it.
-        y = self.tile_size * (num // self.per_row)
-        x = self.tile_size * (num % self.per_row)
-        sprite = Sprite()
-        sprite.image = pygame.Surface((self.tile_size, self.tile_size))
+        y = self.tile_size * (num  // self.per_row)
+        x = self.tile_size * (num  % self.per_row)
+        sprite = Drawable()
+        sprite.image = pygame.Surface((self.tile_size, self.tile_size)).convert_alpha()
         sprite.image.blit(self.sheet, (0, 0), (x, y, x + self.tile_size, y + self.tile_size))
         return sprite
 
