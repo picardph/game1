@@ -32,10 +32,3 @@ class Character(DUGameObject):
             for sprite in collisions:
                 if sprite in self.events.keys():
                     self.events[sprite]()
-
-class Player(Character):
-    def __init__(self, z=0):
-        super().__init__(z)
-
-class NPC(Character):
-    pass
