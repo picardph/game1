@@ -1,6 +1,7 @@
 from .settings import *
 from .engine import *
-from .game_object import *
+from .game_objects import *
+
 import csv
 import math
 import os

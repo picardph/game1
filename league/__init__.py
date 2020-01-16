@@ -3,8 +3,10 @@ The L.E.A.G.U.E (Laker Educationally Accessible Game Understanding Engine) is a 
 game engine for 2D games.  It is used for teaching game development.
 """
 
-from .engine import *
-from .graphics import *
-from .settings import *
+from .engine import Engine
+from .graphics import Spritesheet
+from .graphics import Tilemap
+from .settings import Settings
+from .characters import Player
 
-__all__ = ["Engine", "Settings"]
+#__all__ = [ "engine.Engine" ]
