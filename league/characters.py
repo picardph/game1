@@ -17,10 +17,13 @@ class OffScreenBottomException(OffScreenException):
     pass
 
 class Character(DUGameObject):
-    def __init__(self, x=0, y=0, z=0):
+    """Represents an updateable, drawable sprite objects that
+    can respond to collisions and events.  For collision events
+    add the sprite and the function to call when the sprite
+    and this object collide.
+    """
+    def __init__(self, z=0):
         super().__init__(z)
-        self.rect.x = x
-        self.rect.y = y
         self.events = {}
 
     def update(self, time):
@@ -31,8 +34,8 @@ class Character(DUGameObject):
                     self.events[sprite]()
 
 class Player(Character):
-    def __init__(self, x, y, z=0):
-        super().__init__(x, y, z)
+    def __init__(self, z=0):
+        super().__init__(z)
 
 class NPC(Character):
     pass
