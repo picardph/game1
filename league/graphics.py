@@ -8,20 +8,32 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
-__all__ = ["Tilemap", "Spritesheet"]
-
 class Tilemap:
     """An object that represents an MxN list of tiles.  Give x, y
     returns various pieces of information about that tile, such as
     the image to draw, etc.
 
     Fields:
+    path - A path to the file that holds the tilemap data.  Structure described below.
     spritesheet - The spritesheet from which to get the images for the tiles.
     tile_size - The number of pixels wide and high (we are forcing squares) per tile.
     wide - The number of tiles wide the map holds.
     high - The number of tiles vertically the map holds.
     world - The MxN list of tile numbers.
     sprites - The sprites for drawing the world.
+
+    File structure:
+    A tilemap file begins with the width (an integer) of the map (in tiles, not pixels), a newline,
+    the height (an integer; again in tiles, not pixels), followed by a comma-separated list of lists
+    of integers that represent the sprite number from the spritesheet.  For instance,
+
+    5
+    7
+    1, 1, 1, 1, 2, 1, 1
+    1, 1, 1, 1, 2, 1, 1
+    1, 1, 1, 2, 1, 2, 1
+    1, 1, 1, 2, 1, 2, 2
+    2, 2, 2, 2, 1, 2, 2
     """
     def __init__(self, path, spritesheet, tile_size = Settings.tile_size, layer = 0):
         self.path = path
