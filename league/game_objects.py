@@ -1,5 +1,6 @@
 import abc
 import pygame
+from .settings import Settings
 
 class GameObject(abc.ABC):
     """Any object that makes up our game world."""
@@ -10,6 +11,8 @@ class Drawable(pygame.sprite.Sprite):
     def __init__(self, layer=0):
         super().__init__()
         self._layer = layer
+        self.image = None
+        self.rect = pygame.Rect(0, 0, Settings.tile_size, Settings.tile_size)
 
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""

@@ -21,5 +21,3 @@ pip install pygame==2.0.0.dev6
 **Settings** - a static class used to hold default values needed by the Engine class.
 
 # Use
-
-
