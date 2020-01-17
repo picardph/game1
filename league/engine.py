@@ -19,9 +19,9 @@ class Engine:
     objects - A list of updateable game objects.
     drawable - A list of drawable game objects.
     screen - The window we are drawing upon.
-    realDeltaTime - How much clock time has passed since our last check.
-    gameDeltaTime - How much game time has passed since our last check.
-    visible_overlay - Whether to show engine overlay statistics.
+    real_delta_time - How much clock time has passed since our last check.
+    game_delta_time - How much game time has passed since our last check.
+    visible_statistics - Whether to show engine statistics statistics.
     """
 
     def __init__(self, title):
@@ -30,13 +30,15 @@ class Engine:
         self.clock = None 
         self.events = {}
         self.key_events = {}
-        self.key_events[Settings.overlay_key] = self.toggle_overlay
+        self.key_events[Settings.statistics_key] = self.toggle_statistics
         self.objects = []
         self.drawables = pygame.sprite.LayeredUpdates()
         self.screen = None
-        self.realDeltaTime = 0
-        self.visible_overlay = False
-        self.overlay_font = None
+        self.real_delta_time = 0
+        self.visible_statistics = False
+        self.statistics_font = None
+        self.collisions = {}
+        self.overlay = None
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -49,6 +51,7 @@ class Engine:
         pygame.display.set_caption(self.title)
         # Create the clock
         self.clock = pygame.time.Clock()
+        self.last_checked_time = pygame.time.get_ticks()
         # Startup the joystick system
         pygame.joystick.init()
         # For each joystick we find, initialize the stick
@@ -56,16 +59,18 @@ class Engine:
             pygame.joystick.Joystick(i).init()
         # Set the repeat delay for key presses
         pygame.key.set_repeat(Settings.key_repeat)
-        # Create overlay font
-        self.overlay_font = pygame.font.Font(None,30)
+        # Create statistics font
+        self.statistics_font = pygame.font.Font(None,30)
 
     def run(self):
         """The main game loop.  As close to our book code as possible."""
         self.running = True
         while self.running:
             # The time since the last check
-            self.realDeltaTime = pygame.time.get_ticks() - self.realDeltaTime 
-            self.gameDeltaTime = self.realDeltaTime * Settings.gameTimeFactor
+            now = pygame.time.get_ticks()
+            self.real_delta_time = now - self.last_checked_time
+            self.last_checked_time = now
+            self.game_delta_time = self.real_delta_time * (0.001 * Settings.gameTimeFactor)
 
             # Wipe screen
             self.screen.fill(Settings.fill_color)
@@ -75,15 +80,20 @@ class Engine:
 
             # Update game world
             # Each object must have an update(time) method
+            self.check_collisions()
             for o in self.objects:
-                o.update(self.gameDeltaTime)
+                o.update(self.game_delta_time)
 
             # Generate outputs
             #d.update()
             self.drawables.draw(self.screen)
 
+            # Show statistics?
+            if self.visible_statistics:
+                self.show_statistics()
+            
             # Show overlay?
-            if self.visible_overlay:
+            if self.overlay:
                 self.show_overlay()
 
             # Could keep track of rectangles and update here, but eh.
@@ -91,26 +101,36 @@ class Engine:
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
+
+    def check_collisions(self):
+        for i in self.collisions.keys():
+            if pygame.sprite.collide_rect(i, self.collisions[i][0]):
+                self.collisions[i][1]()
+
     def add_group(self, group):
         self.drawables.add(group.sprites())
 
-    def toggle_overlay(self):
-        self.visible_overlay = not self.visible_overlay
+    def toggle_statistics(self):
+        self.visible_statistics = not self.visible_statistics
 
-    def show_overlay(self):
-        overlay_string = "Version: " + str(Settings.version)
-        overlay_string = overlay_string +  " FPS: " + str(int(self.clock.get_fps()))
-        fps = self.overlay_font.render(overlay_string, True, Settings.overlay_color)
+    def show_statistics(self):
+        statistics_string = "Version: " + str(Settings.version)
+        statistics_string = statistics_string +  " FPS: " + str(int(self.clock.get_fps()))
+        fps = self.statistics_font.render(statistics_string, True, Settings.statistics_color)
         self.screen.blit(fps, (10, 10))
     
+    def show_overlay(self):
+        overlay = self.statistics_font.render(self.overlay, True, Settings.overlay_color)
+        self.screen.blit(overlay, Settings.overlay_location)
+
     def stop(self):
         self.running = False
 
     def handle_inputs(self):
         for event in pygame.event.get():
             if event.type in self.events.keys():
-                self.events[event.type]()
+                self.events[event.type](self.game_delta_time)
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
-                    self.key_events[event.key]() 
+                    self.key_events[event.key](self.game_delta_time) 
 

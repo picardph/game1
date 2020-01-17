@@ -24,8 +24,10 @@ class Settings:
     tile_size = 32
     gameTimeFactor = 1
     fill_color = (255, 255, 255)
+    statistics_color = (0, 0, 0)
+    statistics_key = pygame.K_BACKQUOTE
     overlay_color = (0, 0, 0)
-    overlay_key = pygame.K_BACKQUOTE
+    overlay_location = (50, 580)
 
 from enum import IntEnum
 class State(IntEnum):
