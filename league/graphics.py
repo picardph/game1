@@ -45,11 +45,18 @@ class Tilemap:
         self.__parse()
 
     def __parse(self):
+    """This function begins the process of (attempting) to
+    parse a level file.  The structure of the file is described above.
+    """
         with open(self.path, 'r') as f:
             reader = csv.reader(f)
             contents = list(reader)
+        # How many tiles wide is our world?
         self.wide = contents[0]
+        # And how tall?
         self.high = contents[1]
+        # Sprite numbers for all tiles are in the
+        # multidimensional list "world".
         self.world = contents[2:]
         a = 0
         for i in self.world:
@@ -57,11 +64,10 @@ class Tilemap:
             for j in i:
                 x = b * self.spritesheet.tile_size
                 y = a * self.spritesheet.tile_size
-                #print(str(j) + " @ " + str(x) + ", " + str(y))
                 base_sprite = self.spritesheet.sprites[int(j)]
                 sprite = Drawable(self.layer)
                 sprite.image = base_sprite.image
-                # Set rectangle coords
+                # Set rectangle coords (using top-left coords here)
                 rect = sprite.image.get_rect() 
                 rect.x = x
                 rect.y = y
