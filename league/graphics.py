@@ -45,9 +45,9 @@ class Tilemap:
         self.__parse()
 
     def __parse(self):
-    """This function begins the process of (attempting) to
-    parse a level file.  The structure of the file is described above.
-    """
+        """This function begins the process of (attempting) to
+        parse a level file.  The structure of the file is described above.
+        """
         with open(self.path, 'r') as f:
             reader = csv.reader(f)
             contents = list(reader)
