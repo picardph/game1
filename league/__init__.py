@@ -7,6 +7,10 @@ from .engine import Engine
 from .graphics import Spritesheet
 from .graphics import Tilemap
 from .settings import Settings
-from .characters import Player
+from .characters import Character
+from .characters import OffScreenException 
+from .characters import OffScreenLeftException 
+from .characters import OffScreenRightException 
+from .characters import OffScreenTopException 
+from .characters import OffScreenBottomException 
 
-#__all__ = [ "engine.Engine" ]
