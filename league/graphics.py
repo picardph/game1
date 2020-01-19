@@ -8,6 +8,9 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
+class Camera:
+    pass
+
 class Tilemap:
     """An object that represents an MxN list of tiles.  Give x, y
     returns various pieces of information about that tile, such as

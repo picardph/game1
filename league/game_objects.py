@@ -13,6 +13,8 @@ class Drawable(pygame.sprite.Sprite):
         self._layer = layer
         self.image = None
         self.rect = pygame.Rect(0, 0, Settings.tile_size, Settings.tile_size)
+        self.x = 0
+        self.y = 0
 
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""
