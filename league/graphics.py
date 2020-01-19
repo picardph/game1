@@ -8,8 +8,41 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
-class Camera:
-    pass
+class Camera(UGameObject):
+    def __init__(self, width, height, center_on, drawables):
+        self.width = width
+        self.height = height
+        self.center_on = center_on
+        self.drawables = drawables
+        self.x = self.center_on.x
+        self.y = self.center_on.y
+    def update(deltaTime):
+        pass
+
+class DumbCamera(Camera):
+    def update(self, time):
+        self.x = self.center_on.x
+        self.y = self.center_on.y
+        offset_x = - (self.x - (self.width // 2))
+        offset_y = - (self.y - (self.height // 2))
+        
+        for d in self.drawables:
+            d.rect.x = d.x + offset_x
+            d.rect.y = d.y + offset_y
+
+class LessDumbCamera(Camera):
+    def update(self, time):
+        if self.center_on.x - self.width // 2 > 0 and self.center_on.x + self.width // 2 < self.world_size[0]:
+            self.x = self.center_on.x
+        if self.center_on.y - self.height // 2 > 0 and self.center_on.y + self.height // 2 < self.world_size[1]:
+            self.y = self.center_on.y
+        offset_x = - (self.x - (self.width // 2))
+        offset_y = - (self.y - (self.height // 2))
+        #print(str(offset_x) + ", " + str(offset_y))
+        
+        for d in self.drawables:
+            d.rect.x = d.x + offset_x
+            d.rect.y = d.y + offset_y
 
 class Tilemap:
     """An object that represents an MxN list of tiles.  Give x, y
@@ -55,9 +88,9 @@ class Tilemap:
             reader = csv.reader(f)
             contents = list(reader)
         # How many tiles wide is our world?
-        self.wide = contents[0]
+        self.wide = int(contents[0][0])
         # And how tall?
-        self.high = contents[1]
+        self.high = int(contents[1][0])
         # Sprite numbers for all tiles are in the
         # multidimensional list "world".
         self.world = contents[2:]
@@ -74,6 +107,8 @@ class Tilemap:
                 rect = sprite.image.get_rect() 
                 rect.x = x
                 rect.y = y
+                sprite.x = x
+                sprite.y = y
                 sprite.rect = rect
                 self.group.add(sprite)
                 b = b + 1
