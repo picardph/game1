@@ -16,8 +16,9 @@ pip install pygame==2.0.0.dev6
 
 **Engine** - the core game engine.  No game logic should go here, merely the game loop.
 
-**Graphics** - a utility class for graphics functions.
+The engine handles events, calls update(deltaTime) on all updateable objects (held in self.objects) and draws all objects in self.drawables.
 
-**Settings** - a static class used to hold default values needed by the Engine class.
+**Graphics** - a utility class for graphics functions.  Includes tilemaps, spritesheets, and cameras.
 
-# Use
+**Settings** - a static class used to hold default values needed by the Engine class.  Be sure to set values to your game's values before starting the engine.
+
