@@ -9,13 +9,14 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
 class Camera(UGameObject):
-    def __init__(self, width, height, center_on, drawables):
+    def __init__(self, width, height, center_on, drawables, world_size):
         self.width = width
         self.height = height
         self.center_on = center_on
         self.drawables = drawables
         self.x = self.center_on.x
         self.y = self.center_on.y
+        self.world_size = world_size
     def update(deltaTime):
         pass
 
