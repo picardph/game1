@@ -22,8 +22,8 @@ class Character(DUGameObject):
     add the sprite and the function to call when the sprite
     and this object collide.
     """
-    def __init__(self, z=0):
-        super().__init__(z)
+    def __init__(self, z=0, x=0, y=0):
+        super().__init__(z, x, y)
         self.events = {}
 
     def update(self, time):

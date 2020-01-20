@@ -4,7 +4,8 @@ game engine for 2D games.  It is used for teaching game development.
 """
 
 from .engine import Engine
-from .graphics import Camera
+from .graphics import DumbCamera
+from .graphics import *
 from .graphics import Spritesheet
 from .graphics import Tilemap
 from .settings import Settings

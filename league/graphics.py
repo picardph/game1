@@ -17,6 +17,7 @@ class Camera(UGameObject):
         self.x = self.center_on.x
         self.y = self.center_on.y
         self.world_size = world_size
+
     def update(deltaTime):
         pass
 
@@ -78,7 +79,8 @@ class Tilemap:
         self.tile_size = tile_size
         self.layer = layer
         self.world = []
-        self.group = pygame.sprite.Group()
+        self.passable = pygame.sprite.Group()
+        self.impassable = pygame.sprite.Group()
         self.__parse()
 
     def __parse(self):
@@ -101,7 +103,8 @@ class Tilemap:
             for j in i:
                 x = b * self.spritesheet.tile_size
                 y = a * self.spritesheet.tile_size
-                base_sprite = self.spritesheet.sprites[int(j)]
+                num = int(j)
+                base_sprite = self.spritesheet.sprites[abs(num)]
                 sprite = Drawable(self.layer)
                 sprite.image = base_sprite.image
                 # Set rectangle coords (using top-left coords here)
@@ -111,7 +114,9 @@ class Tilemap:
                 sprite.x = x
                 sprite.y = y
                 sprite.rect = rect
-                self.group.add(sprite)
+                self.passable.add(sprite)
+                if num < 0:
+                    self.impassable.add(sprite)
                 b = b + 1
             a = a + 1
 

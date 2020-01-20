@@ -8,13 +8,13 @@ class GameObject(abc.ABC):
 
 class Drawable(pygame.sprite.Sprite):
     """Creates a drawable.  For us, a drawable is a pygame Sprite object."""
-    def __init__(self, layer=0):
+    def __init__(self, layer=0, x=0, y=0):
         super().__init__()
         self._layer = layer
         self.image = None
         self.rect = pygame.Rect(0, 0, Settings.tile_size, Settings.tile_size)
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
 
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""
