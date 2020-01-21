@@ -123,8 +123,11 @@ class Engine:
         overlay = self.statistics_font.render(self.overlay, True, Settings.overlay_color)
         self.screen.blit(overlay, Settings.overlay_location)
 
-    def stop(self):
+    def stop(self, time):
         self.running = False
+
+    def end(self, time):
+        pygame.quit()
 
     def handle_inputs(self):
         for event in pygame.event.get():
