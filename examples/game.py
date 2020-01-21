@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import pygame
+import sys
+sys.path.append('..')
 import league
 from player import Player
 
