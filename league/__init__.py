@@ -15,4 +15,4 @@ from .characters import OffScreenLeftException
 from .characters import OffScreenRightException 
 from .characters import OffScreenTopException 
 from .characters import OffScreenBottomException 
-
+from .game_objects import DUGameObject

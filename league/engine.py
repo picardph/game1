@@ -120,8 +120,7 @@ class Engine:
         self.screen.blit(fps, (10, 10))
     
     def show_overlay(self):
-        overlay = self.statistics_font.render(self.overlay, True, Settings.overlay_color)
-        self.screen.blit(overlay, Settings.overlay_location)
+        self.screen.blit(self.overlay, Settings.overlay_location)
 
     def stop(self, time):
         self.running = False

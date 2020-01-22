@@ -10,6 +10,10 @@ class Player(Character):
     """
     def __init__(self, z=0, x=0, y=0):
         super().__init__(z, x, y)
+        # This unit's health
+        self.health = 100
+        # Last time I was hit
+        self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 512
         # Where the player is positioned
@@ -36,6 +40,9 @@ class Player(Character):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
+        # Overlay
+        self.font = pygame.font.Font('freesansbold.ttf',32)
+        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
     def move_left(self, time):
         amount = self.delta * time
@@ -106,3 +113,9 @@ class Player(Character):
             self.collider.rect.y = sprite.y
             if pygame.sprite.collide_rect(self, self.collider):
                 self.collisions.append(sprite)
+
+    def ouch(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_hit > 1000:
+            self.health = self.health - 10
+            self.last_hit = now
