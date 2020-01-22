@@ -17,7 +17,7 @@ class OffScreenBottomException(OffScreenException):
     pass
 
 class Character(DUGameObject):
-    """Represents an updateable, drawable sprite objects that
+    """Represents an updateable, drawable sprite object that
     can respond to collisions and events.  For collision events
     add the sprite and the function to call when the sprite
     and this object collide.

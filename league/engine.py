@@ -16,12 +16,16 @@ class Engine:
     running - Whether or not the engine is currently in the main game loop.
     clock - The real world clock for elapsed time.
     events - A dictionary of events and handling functions.
+    key_events - A dictionary of events and handling functions for KEYDOWN events.
+                 Please note that the backtick (`) key is default.
     objects - A list of updateable game objects.
-    drawable - A list of drawable game objects.
+    drawables - A list of drawable game objects.
     screen - The window we are drawing upon.
     real_delta_time - How much clock time has passed since our last check.
     game_delta_time - How much game time has passed since our last check.
     visible_statistics - Whether to show engine statistics statistics.
+    statistics_font - Which font to use for engine stats
+    collisions = A dictionary of objects that can collide, and the function to call when they do. 
     """
 
     def __init__(self, title):
@@ -38,7 +42,6 @@ class Engine:
         self.visible_statistics = False
         self.statistics_font = None
         self.collisions = {}
-        self.overlay = None
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -92,16 +95,15 @@ class Engine:
             if self.visible_statistics:
                 self.show_statistics()
             
-            # Show overlay?
-            if self.overlay:
-                self.show_overlay()
-
             # Could keep track of rectangles and update here, but eh.
             pygame.display.flip()
 
             # Frame limiting code
             self.clock.tick(Settings.fps)
 
+    # Here we will iterate through the possible collisions.  If sprite
+    # i collides with the sprite in the tuple, call the function in the
+    # tuple.
     def check_collisions(self):
         for i in self.collisions.keys():
             if pygame.sprite.collide_rect(i, self.collisions[i][0]):
@@ -110,28 +112,34 @@ class Engine:
     def add_group(self, group):
         self.drawables.add(group.sprites())
 
+    # Show/Hide the engine statistics
     def toggle_statistics(self):
         self.visible_statistics = not self.visible_statistics
 
+    # If we are to show that statistics, draw them with this function
     def show_statistics(self):
         statistics_string = "Version: " + str(Settings.version)
         statistics_string = statistics_string +  " FPS: " + str(int(self.clock.get_fps()))
         fps = self.statistics_font.render(statistics_string, True, Settings.statistics_color)
         self.screen.blit(fps, (10, 10))
     
-    def show_overlay(self):
-        self.screen.blit(self.overlay, Settings.overlay_location)
-
+    # Toggle the engine to stop
     def stop(self, time):
         self.running = False
 
+    # Shutdown pygame
     def end(self, time):
         pygame.quit()
 
+    # Process all events recieved.  This is a weak system, but
+    # it works as long as you don't want multiple functions
+    # to be called per event.
     def handle_inputs(self):
         for event in pygame.event.get():
+            # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)
+            # Check if these key_event keys were pressed
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
                     self.key_events[event.key](self.game_delta_time) 
