@@ -13,6 +13,7 @@ class Overlay(league.DUGameObject):
         self.y = 10
         self.rect.x = 100
         self.rect.y = 10
+        self.static = True
 
     def update(self, deltaTime):
         self.image = self.font.render(str(self.player.health) + "        4 lives", True, (0,0,0))
