@@ -35,5 +35,10 @@ if __name__ == "__main__":
     e.key_events[pygame.K_w] = you.move_up
     e.key_events[pygame.K_s] = you.move_down
 
+    e.key_events[pygame.K_LEFT] = you.move_left
+    e.key_events[pygame.K_RIGHT] = you.move_right
+    e.key_events[pygame.K_UP] = you.move_up
+    e.key_events[pygame.K_DOWN] = you.move_down
+
     e.events[pygame.QUIT] = e.stop
     e.run()
