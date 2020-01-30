@@ -12,7 +12,7 @@ if __name__ == "__main__":
     t = league.Tilemap('./assets/world.lvl', sprites, layer=1)
     b = league.Tilemap('./assets/background.lvl', sprites, layer=0)
     world_size = (t.wide * league.Settings.tile_size, t.high * league.Settings.tile_size)
-    e.drawables.add(t.passable.sprites())
+
 
     you = Player(0, 0, 0)
     you.world_size = world_size
@@ -25,5 +25,11 @@ if __name__ == "__main__":
     e.objects.append(you)
     e.drawables.add(you)
 
+    e.key_events[pygame.K_a] = you.move_left
+    e.key_events[pygame.K_d] = you.move_right
+    e.key_events[pygame.K_w] = you.move_up
+    e.key_events[pygame.K_s] = you.move_down
+
     e.events[pygame.QUIT] = e.stop
+   # e.drawables.add(t.passable.sprites())
     e.run()
