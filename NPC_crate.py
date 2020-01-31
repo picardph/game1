@@ -2,6 +2,9 @@
 # Ideally when the player collides with a crate
 # it will move 1 tile in the direction of the player's movement.
 
+from league import *
+import pygame
+
 class Crate:
     def __init__(self, x, y, image='./assets/NPCs/large_box.png'):
 
