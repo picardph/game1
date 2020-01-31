@@ -4,7 +4,7 @@ from player import Player
 
 
 if __name__ == "__main__":
-    e = league.Engine('Free Palestine')
+    e = league.Engine('Knave Escape')
     e.init_pygame()
 
     # Initialize the player
