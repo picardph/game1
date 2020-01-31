@@ -1,6 +1,7 @@
 import pygame
 import league
 from player import Player
+from NPC_crate import *
 
 
 if __name__ == "__main__":
@@ -27,8 +28,20 @@ if __name__ == "__main__":
     print(you.image)
 
 
+    crate1 = Crate(0,0,0)
+    crate1.world_size = world_size
+    crate1.rect = crate1.image.get_rect()
+    crate1.blocks.add(t.impassable)
+    crate1._layer = 1
+    print(crate1.image)
+
+
+
     e.objects.append(you)
     e.drawables.add(you)
+
+    e.objects.append(crate1)
+    e.drawables.add(crate1)
 
     e.key_events[pygame.K_a] = you.move_left
     e.key_events[pygame.K_d] = you.move_right

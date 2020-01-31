@@ -28,7 +28,7 @@ class Character(DUGameObject):
 
     def update(self, time):
         for group in self.groups():
-            collisions = pygame.sprite.spritecollide(self, group)
+            collisions = pygame.sprite.spritecollide(self, group, dokill = None)
             for sprite in collisions:
                 if sprite in self.events.keys():
                     self.events[sprite]()
