@@ -28,7 +28,7 @@ if __name__ == "__main__":
     print(you.image)
 
 
-    crate1 = Crate(0,0,0)
+    crate1 = Crate(0,100,0)
     crate1.world_size = world_size
     crate1.rect = crate1.image.get_rect()
     crate1.blocks.add(t.impassable)
