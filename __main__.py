@@ -23,9 +23,22 @@ if __name__ == "__main__":
     you.blocks.add(scene.impassable)
     you._layer = 1
 
+    testCrate = Crate(0, 200, 100)
+    testCrate.world_size = world_size
+    testCrate.rect = testCrate.image.get_rect()
+    testCrate.blocks.add(scene.impassable)
+    testCrate._layer = 1
+
     e.objects.append(you)
     e.drawables.add(you)
     e.drawables.add(scene)
+
+    #test crate
+    e.objects.append(testCrate)
+    e.drawables.add(testCrate)
+
+    # Player Collides with Box
+    e.collisions[you] = (testCrate, testCrate.move_right)
 
     e.key_events[pygame.K_a] = you.move_left
     e.key_events[pygame.K_d] = you.move_right

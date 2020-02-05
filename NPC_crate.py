@@ -11,12 +11,12 @@ class Crate(Character):
         super().__init__(z, x, y)
 
         # This unit's health
-        self.health = 10000
+        #self.health = 10000
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
         #movement speed
-        self.delta = 350
+        self.delta = 100
 
         #crate position
         self.x = x
@@ -27,13 +27,14 @@ class Crate(Character):
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect()
 
-        # How big the world is, so we can check for boundries
+        # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
-        # What sprites am I not allowd to cross?
+        # What sprites am I not allowed to cross?
         self.blocks = pygame.sprite.Group()
         # Which collision detection function?
         self.collide_function = pygame.sprite.collide_circle
         self.collisions = []
+
         # For collision detection, we need to compare our sprite
         # with collideable sprites.  However, we have to remap
         # the collideable sprites coordinates since they change.
@@ -44,8 +45,8 @@ class Crate(Character):
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
 
-    def move_left(self, time):
-        amount = self.delta * time
+    def move_left(self):
+        amount = self.delta * 10
         try:
             if self.x - amount < 0:
                 raise OffScreenLeftException
@@ -58,9 +59,9 @@ class Crate(Character):
         except:
             pass
 
-    def move_right(self, time):
+    def move_right(self):
         self.collisions = []
-        amount = self.delta * time
+        amount = 1
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
