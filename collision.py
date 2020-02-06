@@ -13,7 +13,15 @@ class Collision():
 
         self.direction = self.direction()
 
+        print(self.direction)
 
+        if issubclass(type(source), Collidable):
+            source.onCollision(self)
+        if issubclass(type(target), Collidable):
+            target.onCollision(self)
+
+
+#TODO Needs to be reworked. May need to have direction for both source and target.
     def direction(self):
         diffX = self.source.rect.left - self.target.rect.left
         diffY = self.source.rect.top - self.target.rect.top
@@ -30,3 +38,7 @@ class Collision():
                 direction = Direction.NORTH
         return direction
 
+class Collidable():
+# Class that provides collision event handling to other classes.
+    def onCollision(self, collision):
+        pass
