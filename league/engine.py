@@ -142,5 +142,5 @@ class Engine:
             # Check if these key_event keys were pressed
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
-                    self.key_events[event.key]() 
+                    self.key_events[event.key](self.game_delta_time) 
 
