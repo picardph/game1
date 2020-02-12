@@ -3,6 +3,7 @@ import league
 import json
 import enum
 import NPC_crate
+import range_shot
 from player import Player
 
 
@@ -22,6 +23,8 @@ class TileType(enum.Enum):
 class Scene(league.game_objects.Drawable):
     def __init__(self, engine, folder):
         super().__init__()
+        self.tw = league.settings.Settings.tile_size
+        self.th = league.settings.Settings.tile_size
         file = open(folder + "/data.json", "r")
         data = json.loads(file.read())
         file.close()
@@ -41,12 +44,12 @@ class Scene(league.game_objects.Drawable):
             TileType.end: pygame.image.load('assets/tiles/closed_door.png').convert(),
             TileType.open_end: pygame.image.load('assets/tiles/open_door.png').convert()
         }
-
+        self.engine = engine
         self.impassable = pygame.sprite.Group()
 
         world_size = (self.get_width() * league.Settings.tile_size, self.get_height() * league.Settings.tile_size)
 
-        player = Player(0, 0, 0)
+        player = Player(self, 0, 0, 0)
         player.world_size = world_size
         player.rect = player.image.get_rect()
         player._layer = 1
@@ -86,6 +89,8 @@ class Scene(league.game_objects.Drawable):
                 elif color == TileType.start.value:
                     self.__start_x = x * TILE_WIDTH
                     self.__start_y = y * TILE_HEIGHT
+                    player.x = x
+                    player.y = y
                 elif color == TileType.end.value:
                     self.__end_x = x * TILE_WIDTH
                     self.__end_y = y * TILE_HEIGHT
@@ -106,10 +111,10 @@ class Scene(league.game_objects.Drawable):
         player.x = self.get_starting_x()
         player.y = self.get_starting_y()
 
-        engine.key_events[pygame.K_a] = player.move_left
-        engine.key_events[pygame.K_d] = player.move_right
-        engine.key_events[pygame.K_w] = player.move_up
-        engine.key_events[pygame.K_s] = player.move_down
+        engine.key_events[pygame.K_a] = player.shoot_left
+        engine.key_events[pygame.K_d] = player.shoot_right
+        engine.key_events[pygame.K_w] = player.shoot_up
+        engine.key_events[pygame.K_s] = player.shoot_down
 
         engine.key_events[pygame.K_LEFT] = player.move_left
         engine.key_events[pygame.K_RIGHT] = player.move_right
@@ -140,3 +145,9 @@ class Scene(league.game_objects.Drawable):
 
     def get_starting_y(self):
         return self.__start_y
+
+    def addRanged(self, x, y):
+        bullet = range_shot.Ranged_Shot(0, x, y)
+        bullet._layer = 1
+        self.engine.objects.append(bullet)
+        self.engine.drawables.add(bullet)

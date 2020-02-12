@@ -2,6 +2,8 @@ from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
 import pygame
+from range_shot import Ranged_Shot
+
 
 class Player(Character, Collidable):
     """This is a sample class for a player object.  A player
@@ -10,7 +12,7 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, z=0, x=0, y=0, image='assets/norris.png'):
+    def __init__(self, scene, z=0, x=0, y=0, image='assets/norris.png'):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
@@ -45,6 +47,8 @@ class Player(Character, Collidable):
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
+
+        self.scene = scene
 
     def move_left(self):
         amount = self.delta * Updateable.gameDeltaTime
@@ -89,6 +93,19 @@ class Player(Character, Collidable):
                 self.update(0)
         except:
             pass
+
+    def shoot_left(self):
+        pass
+
+    def shoot_right(self):
+        self.scene.addRanged(self.x, self.y)
+        pass
+
+    def shoot_up(self):
+        pass
+
+    def shoot_down(self):
+        pass
 
     def update(self):
         self.rect.x = self.x
