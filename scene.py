@@ -81,7 +81,7 @@ class Scene(league.game_objects.Drawable):
 
                     engine.objects.append(crate)
                     engine.drawables.add(crate)
-                    engine.collisions[player] = (crate, crate.move_right)
+
                     # testCrate.blocks.add(scene.impassable)
                 elif color == TileType.start.value:
                     self.__start_x = x * TILE_WIDTH
@@ -100,7 +100,7 @@ class Scene(league.game_objects.Drawable):
             for im in self.impassable:
                 if c is not im:
                     c.blocks.add(im)
-        player.blocks.add(self.impassable)
+        player.blocks.add(self.impassable, self.__crates)
 
         # Move the player to the starting position.
         player.x = self.get_starting_x()
