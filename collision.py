@@ -1,5 +1,6 @@
 from pygame import *
 from league.constants import Direction
+from league.game_objects import Drawable
 
 class Collision():
     # This is a class to give more detailed information about a collision.
@@ -11,18 +12,16 @@ class Collision():
         #The object collided with.
         self.target = target
 
-        self.direction = self.direction()
-
-        print(self.direction)
+        # These must be called in this order currently.
+        self.sourceDirection = self.calcSourceDirection()
+        self.targetDirection = self.calcTargetDirection(self.sourceDirection)
 
         if issubclass(type(source), Collidable):
-            source.onCollision(self)
+            source.onCollision(self, self.sourceDirection)
         if issubclass(type(target), Collidable):
-            target.onCollision(self)
+            target.onCollision(self, self.targetDirection)
 
-
-#TODO Needs to be reworked. May need to have direction for both source and target.
-    def direction(self):
+    def calcSourceDirection(self):
         diffX = self.source.rect.left - self.target.rect.left
         diffY = self.source.rect.top - self.target.rect.top
 
@@ -38,7 +37,18 @@ class Collision():
                 direction = Direction.NORTH
         return direction
 
-class Collidable():
-# Class that provides collision event handling to other classes.
-    def onCollision(self, collision):
+    def calcTargetDirection(self, direction):
+        if direction == Direction.EAST:
+            return Direction.WEST
+        elif direction == Direction.WEST:
+            return Direction.EAST
+        elif direction == Direction.NORTH:
+            return Direction.SOUTH
+        else:
+            return Direction.NORTH
+
+class Collidable(Drawable):
+# Class that provides collision handling to other classes.
+
+    def onCollision(self, collision, direction):
         pass
