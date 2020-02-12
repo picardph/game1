@@ -10,7 +10,7 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, z=0, x=0, y=0, image='./assets/zombie.png'):
+    def __init__(self, z=0, x=0, y=0, image='assets/norris.png'):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
@@ -25,7 +25,6 @@ class Player(Character, Collidable):
         # The image to use.  This will change frequently
         # in an animated Player class.
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)

@@ -9,12 +9,9 @@ if __name__ == "__main__":
     e = league.Engine('Knave Escape')
     e.init_pygame()
 
-    # Initialize the player
-    sprites = league.Spritesheet('./assets/base_chip_pipo.png', league.Settings.tile_size, 8)
     scene = Scene(e, "assets/rooms/level1")
-    world_size = (scene.get_width() * league.Settings.tile_size, scene.get_height() * league.Settings.tile_size)
-
     scene.layer = 0
+<<<<<<< HEAD
     you = Player(0, scene.get_starting_x(), scene.get_starting_y())
     testCrate = Crate(0, 200, 100)
     scene.impassable.add(testCrate)
@@ -50,5 +47,9 @@ if __name__ == "__main__":
     e.key_events[pygame.K_UP] = you.move_up
     e.key_events[pygame.K_DOWN] = you.move_down
 
+=======
+    e.drawables.add(scene)
+
+>>>>>>> master
     e.events[pygame.QUIT] = e.stop
     e.run()
