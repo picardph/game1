@@ -7,6 +7,7 @@ from league.constants import Direction
 from league import Settings
 from league import Character
 from league.game_objects import Drawable
+from league.game_objects import Updateable
 import pygame
 from collision import Collision, Collidable
 
@@ -19,7 +20,7 @@ class Crate(Character, Collidable):
         #self.health = 10000
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
-        self.time = 0
+
         #movement speed
         self.delta = 100
 
@@ -52,7 +53,7 @@ class Crate(Character, Collidable):
 
     def move_left(self):
         self.collisions = []
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x - amount < 0:
                 raise OffScreenLeftException
@@ -68,7 +69,7 @@ class Crate(Character, Collidable):
 
     def move_right(self):
         self.collisions = []
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
@@ -84,7 +85,7 @@ class Crate(Character, Collidable):
 
     def move_up(self):
         self.collisions = []
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
@@ -99,7 +100,7 @@ class Crate(Character, Collidable):
             pass
 
     def move_down(self):
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -113,10 +114,7 @@ class Crate(Character, Collidable):
         except:
             pass
 
-    def update(self, time):
-#THis is probably terrible but I;m not sure how else to go about it.
-        self.time = time
-
+    def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
         #self.collisions = []

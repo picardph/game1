@@ -1,4 +1,5 @@
 from league import *
+from league.game_objects import Updateable
 from collision import Collision, Collidable
 import pygame
 
@@ -15,7 +16,6 @@ class Player(Character, Collidable):
         self.health = 100
         # Last time I was hit
 
-        self.time = 0
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 512
@@ -48,7 +48,7 @@ class Player(Character, Collidable):
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
     def move_left(self):
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x - amount < 0:
                 raise OffScreenLeftException
@@ -63,7 +63,7 @@ class Player(Character, Collidable):
 
     def move_right(self):
         self.collisions = []
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
@@ -78,7 +78,7 @@ class Player(Character, Collidable):
 
     def move_up(self):
         self.collisions = []
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
@@ -93,7 +93,7 @@ class Player(Character, Collidable):
             pass
 
     def move_down(self):
-        amount = self.delta * self.time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -107,8 +107,7 @@ class Player(Character, Collidable):
         except:
             pass
 
-    def update(self, time):
-        self.time = time
+    def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
         self.collisions = []
