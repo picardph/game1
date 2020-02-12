@@ -119,8 +119,9 @@ class Player(Character, Collidable):
                 if pygame.sprite.collide_rect(self, self.collider):
                     Collision(self, sprite)
 
-    def onCollision(self, collision):
+    def onCollision(self, collision, direction):
         pass
+
 
     def ouch(self):
         now = pygame.time.get_ticks()
