@@ -12,40 +12,35 @@ class Collision():
         #The object collided with.
         self.target = target
 
-        # These must be called in this order currently.
-        self.sourceDirection = self.calcSourceDirection()
-        self.targetDirection = self.calcTargetDirection(self.sourceDirection)
+        self.calcDirections()
 
         if issubclass(type(source), Collidable):
             source.onCollision(self, self.sourceDirection)
+            #print(str(self.source) + "direction: " + str(self.sourceDirection))
         if issubclass(type(target), Collidable):
             target.onCollision(self, self.targetDirection)
+            #print(str(self.target) + " direction: " + str(self.targetDirection))
 
-    def calcSourceDirection(self):
+    def calcDirections(self):
         diffX = self.source.rect.left - self.target.rect.left
         diffY = self.source.rect.top - self.target.rect.top
 
         if abs(diffX) > abs(diffY):
             if diffX > 0:
                 direction = Direction.EAST
+                tarDir = Direction.WEST
             else:
                 direction = Direction.WEST
+                tarDir = Direction.EAST
         else:
             if diffY > 0:
                 direction = Direction.SOUTH
+                tarDir = Direction.NORTH
             else:
                 direction = Direction.NORTH
-        return direction
-
-    def calcTargetDirection(self, direction):
-        if direction == Direction.EAST:
-            return Direction.WEST
-        elif direction == Direction.WEST:
-            return Direction.EAST
-        elif direction == Direction.NORTH:
-            return Direction.SOUTH
-        else:
-            return Direction.NORTH
+                tarDir = Direction.SOUTH
+        self.sourceDirection = direction
+        self.targetDirection = tarDir
 
 class Collidable(Drawable):
 # Class that provides collision handling to other classes.
