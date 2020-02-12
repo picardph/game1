@@ -118,7 +118,15 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
-        pass
+       #Quick and dirty movement code to test collision.
+        if direction is Direction.EAST:
+            self.move_right()
+        elif direction is Direction.WEST:
+            self.move_left()
+        elif direction is Direction.SOUTH:
+            self.move_down()
+        else:
+            self.move_up() 
 
 
     def ouch(self):
