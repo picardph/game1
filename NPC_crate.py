@@ -2,8 +2,11 @@
 # Ideally when the player collides with a crate
 # it will move 1 tile in the direction of the player's movement.
 
-from league import *
+#from league import *
 from league.constants import Direction
+from league import Settings
+from league import Character
+from league.game_objects import Drawable
 import pygame
 from collision import Collision, Collidable
 
@@ -73,7 +76,7 @@ class Crate(Character, Collidable):
                 self.x = self.x + amount
                 self.update(0)
                 if len(self.collisions) != 0:
-                    self.y = self.y - amount
+                    self.x = self.x - amount
                     self.update(0)
                     self.collisions = []
         except:
@@ -125,13 +128,13 @@ class Crate(Character, Collidable):
                     Collision(self, sprite)
         
 
-    def onCollision(self, collision):
+    def onCollision(self, collision, direction):
         #Quick and dirty movement code to test collision.
-        if collision.direction is Direction.EAST:
+        if direction is Direction.EAST:
             self.move_right()
-        elif collision.direction is Direction.WEST:
+        elif direction is Direction.WEST:
             self.move_left()
-        elif collision.direction is Direction.SOUTH:
+        elif direction is Direction.SOUTH:
             self.move_down()
         else:
             self.move_up()
