@@ -54,14 +54,10 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x - amount
                 self.update(0)
-                while(len(self.collisions) != 0):
-                    self.x = self.x + amount
-                    self.update(0)
         except:
             pass
 
     def move_right(self):
-        self.collisions = []
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
@@ -69,14 +65,10 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x + amount
                 self.update(0)
-                while(len(self.collisions) != 0):
-                    self.x = self.x - amount
-                    self.update(0)
         except:
             pass
 
     def move_up(self):
-        self.collisions = []
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
@@ -84,10 +76,6 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y - amount
                 self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y + amount
-                    self.update(0)
-                    self.collisions = []
         except:
             pass
 
@@ -99,17 +87,12 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y + amount
                 self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y - amount
-                    self.update(0)
-                    self.collisions = []
         except:
             pass
 
     def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
-        self.collisions = []
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x
@@ -125,8 +108,10 @@ class Player(Character, Collidable):
             self.move_left()
         elif direction is Direction.SOUTH:
             self.move_down()
-        else:
+        elif direction is Direction.NORTH:
             self.move_up() 
+        else:
+            print("Unknown Direction.")
 
 
     def ouch(self):
