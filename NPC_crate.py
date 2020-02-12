@@ -12,7 +12,7 @@ import pygame
 from collision import Collision, Collidable
 
 class Crate(Character, Collidable):
-    def __init__(self, z, x, y, image='./assets/NPCs/large_box.png'):
+    def __init__(self, z, x, y, image='./assets/NPCs/16x16DungeonCrate.png'):
 
         super().__init__(z, x, y)
 
@@ -30,7 +30,7 @@ class Crate(Character, Collidable):
 
         #crate image
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (64, 64))
+        self.image = pygame.transform.scale(self.image, (32, 32))
         self.rect = self.image.get_rect()
 
         # How big the world is, so we can check for boundaries
