@@ -16,6 +16,7 @@ class Drawable(pygame.sprite.Sprite):
         self.x = x
         self.y = y
 
+
 class Updateable(abc.ABC):
     """An interface that ensures an object has an update(gameDeltaTime) method."""
     #TODO Add gameDeltaTime as a static class variable.
