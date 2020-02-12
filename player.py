@@ -1,7 +1,9 @@
 from league import *
+from league.game_objects import Updateable
+from collision import Collision, Collidable
 import pygame
 
-class Player(Character):
+class Player(Character, Collidable):
     """This is a sample class for a player object.  A player
     is a character, is a drawable, and an updateable object.
     This class should handle everything a player does, such as
@@ -13,6 +15,7 @@ class Player(Character):
         # This unit's health
         self.health = 100
         # Last time I was hit
+
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 512
@@ -43,8 +46,8 @@ class Player(Character):
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
-    def move_left(self, time):
-        amount = self.delta * time
+    def move_left(self):
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x - amount < 0:
                 raise OffScreenLeftException
@@ -57,9 +60,9 @@ class Player(Character):
         except:
             pass
 
-    def move_right(self, time):
+    def move_right(self):
         self.collisions = []
-        amount = self.delta * time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
@@ -72,9 +75,9 @@ class Player(Character):
         except:
             pass
 
-    def move_up(self, time):
+    def move_up(self):
         self.collisions = []
-        amount = self.delta * time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
@@ -88,8 +91,8 @@ class Player(Character):
         except:
             pass
 
-    def move_down(self, time):
-        amount = self.delta * time
+    def move_down(self):
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -103,15 +106,28 @@ class Player(Character):
         except:
             pass
 
-    def update(self, time):
+    def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
         self.collisions = []
         for sprite in self.blocks:
-            self.collider.rect.x= sprite.x
-            self.collider.rect.y = sprite.y
-            if pygame.sprite.collide_rect(self, self.collider):
-                self.collisions.append(sprite)
+            if sprite is not self:
+                self.collider.rect.x = sprite.x
+                self.collider.rect.y = sprite.y
+                if pygame.sprite.collide_rect(self, self.collider):
+                    Collision(self, sprite)
+
+    def onCollision(self, collision, direction):
+       #Quick and dirty movement code to test collision.
+        if direction is Direction.EAST:
+            self.move_right()
+        elif direction is Direction.WEST:
+            self.move_left()
+        elif direction is Direction.SOUTH:
+            self.move_down()
+        else:
+            self.move_up() 
+
 
     def ouch(self):
         now = pygame.time.get_ticks()

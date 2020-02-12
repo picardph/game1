@@ -4,6 +4,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from .settings import *
+from .game_objects import Updateable
 
 class Engine:
     """Engine is the definition of our game engine.  We want it to
@@ -75,6 +76,9 @@ class Engine:
             self.last_checked_time = now
             self.game_delta_time = self.real_delta_time * (0.001 * Settings.gameTimeFactor)
 
+            # Update time for Updatables
+            Updateable.gameDeltaTime = self.game_delta_time
+
             # Wipe screen
             self.screen.fill(Settings.fill_color)
             
@@ -85,7 +89,7 @@ class Engine:
             # Each object must have an update(time) method
             self.check_collisions()
             for o in self.objects:
-                o.update(self.game_delta_time)
+                o.update()
 
             # Generate outputs
             #d.update()
@@ -142,5 +146,5 @@ class Engine:
             # Check if these key_event keys were pressed
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
-                    self.key_events[event.key](self.game_delta_time) 
+                    self.key_events[event.key]() 
 

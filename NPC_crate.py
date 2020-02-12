@@ -2,10 +2,16 @@
 # Ideally when the player collides with a crate
 # it will move 1 tile in the direction of the player's movement.
 
-from league import *
+#from league import *
+from league.constants import Direction
+from league import Settings
+from league import Character
+from league.game_objects import Drawable
+from league.game_objects import Updateable
 import pygame
+from collision import Collision, Collidable
 
-class Crate(Character):
+class Crate(Character, Collidable):
     def __init__(self, z, x, y, image='./assets/NPCs/large_box.png'):
 
         super().__init__(z, x, y)
@@ -46,37 +52,40 @@ class Crate(Character):
         self.collider.rect = self.collider.image.get_rect()
 
     def move_left(self):
-        amount = self.delta * 10
+        self.collisions = []
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x - amount < 0:
                 raise OffScreenLeftException
             else:
                 self.x = self.x - amount
                 self.update(0)
-                while (len(self.collisions) != 0):
+                if len(self.collisions) != 0:
                     self.x = self.x + amount
                     self.update(0)
+                    self.collisions = []
         except:
             pass
 
     def move_right(self):
         self.collisions = []
-        amount = 1
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
             else:
                 self.x = self.x + amount
                 self.update(0)
-                while (len(self.collisions) != 0):
+                if len(self.collisions) != 0:
                     self.x = self.x - amount
                     self.update(0)
+                    self.collisions = []
         except:
             pass
 
-    def move_up(self, time):
+    def move_up(self):
         self.collisions = []
-        amount = self.delta * time
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
@@ -90,8 +99,8 @@ class Crate(Character):
         except:
             pass
 
-    def move_down(self, time):
-        amount = self.delta * time
+    def move_down(self):
+        amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -105,12 +114,25 @@ class Crate(Character):
         except:
             pass
 
-    def update(self, time):
+    def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
-        self.collisions = []
+        #self.collisions = []
         for sprite in self.blocks:
-            self.collider.rect.x = sprite.x
-            self.collider.rect.y = sprite.y
-            if pygame.sprite.collide_rect(self, self.collider):
-                self.collisions.append(sprite)
+            if sprite is not self:
+                self.collider.rect.x = sprite.x
+                self.collider.rect.y = sprite.y
+                if pygame.sprite.collide_rect(self, self.collider):
+                    Collision(self, sprite)
+        
+
+    def onCollision(self, collision, direction):
+        #Quick and dirty movement code to test collision.
+        if direction is Direction.EAST:
+            self.move_right()
+        elif direction is Direction.WEST:
+            self.move_left()
+        elif direction is Direction.SOUTH:
+            self.move_down()
+        else:
+            self.move_up()
