@@ -17,6 +17,7 @@ class TileType(enum.Enum):
     start = pygame.Color(0, 255, 0)                     # Green
     end = pygame.Color(255, 0, 0)                       # Red
     open_end = pygame.Color(200, 0, 0)                  # Light Red
+    pressure_plate = pygame.Color(163, 73, 164)         # Purple
 
 
 class Scene(league.game_objects.Drawable):
@@ -39,7 +40,8 @@ class Scene(league.game_objects.Drawable):
         self.__tile_images = {
             TileType.wall: pygame.image.load('assets/tiles/wall.png').convert(),
             TileType.end: pygame.image.load('assets/tiles/closed_door.png').convert(),
-            TileType.open_end: pygame.image.load('assets/tiles/open_door.png').convert()
+            TileType.open_end: pygame.image.load('assets/tiles/open_door.png').convert(),
+            TileType.pressure_plate: pygame.image.load('assets/tiles/pressure_plate.png').convert()
         }
 
         self.impassable = pygame.sprite.Group()
@@ -90,6 +92,8 @@ class Scene(league.game_objects.Drawable):
                     self.__end_x = x * TILE_WIDTH
                     self.__end_y = y * TILE_HEIGHT
                     self.__background[x][y] = TileType.end
+                elif color == TileType.pressure_plate.value:
+                    self.__background[x][y] = TileType.pressure_plate
 
         # Pre-render that data to a surface to save performance.
         self.image = self.render_background()
@@ -126,7 +130,10 @@ class Scene(league.game_objects.Drawable):
                     background.blit(image, (x * TILE_WIDTH, y * TILE_HEIGHT))
         return background
 
-    def is_puzzle_finished(self, delta):
+    def is_puzzle_finished(self):
+        for x in range(0, self.get_width()):
+            for y in range(0, self.get_height()):
+                pass
         return False
 
     def get_width(self):
