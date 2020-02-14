@@ -2,6 +2,8 @@ from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
 import pygame
+from range_shot import Ranged_Shot
+
 
 class Player(Character, Collidable):
     """This is a sample class for a player object.  A player
@@ -10,7 +12,7 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, z=0, x=0, y=0, image='assets/norris.png'):
+    def __init__(self, scene, z=0, x=0, y=0, image='assets/norris.png'):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
@@ -46,6 +48,8 @@ class Player(Character, Collidable):
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
+        self.scene = scene
+
     def move_left(self):
         amount = self.delta * Updateable.gameDeltaTime
         try:
@@ -54,14 +58,10 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x - amount
                 self.update(0)
-                while(len(self.collisions) != 0):
-                    self.x = self.x + amount
-                    self.update(0)
         except:
             pass
 
     def move_right(self):
-        self.collisions = []
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
@@ -69,14 +69,10 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x + amount
                 self.update(0)
-                while(len(self.collisions) != 0):
-                    self.x = self.x - amount
-                    self.update(0)
         except:
             pass
 
     def move_up(self):
-        self.collisions = []
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
@@ -84,10 +80,6 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y - amount
                 self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y + amount
-                    self.update(0)
-                    self.collisions = []
         except:
             pass
 
@@ -99,17 +91,25 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y + amount
                 self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y - amount
-                    self.update(0)
-                    self.collisions = []
         except:
             pass
+
+    def shoot_left(self):
+        pass
+
+    def shoot_right(self):
+        self.scene.addRanged(self.x, self.y)
+        pass
+
+    def shoot_up(self):
+        pass
+
+    def shoot_down(self):
+        pass
 
     def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
-        self.collisions = []
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x
@@ -125,8 +125,10 @@ class Player(Character, Collidable):
             self.move_left()
         elif direction is Direction.SOUTH:
             self.move_down()
-        else:
+        elif direction is Direction.NORTH:
             self.move_up() 
+        else:
+            print("Unknown Direction.")
 
 
     def ouch(self):
