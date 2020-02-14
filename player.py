@@ -119,13 +119,13 @@ class Player(Character, Collidable):
 
     def onCollision(self, collision, direction):
        #Quick and dirty movement code to test collision.
-        if direction is Direction.EAST:
+        if direction.x > 0:
             self.move_right()
-        elif direction is Direction.WEST:
+        elif direction.x < 0:
             self.move_left()
-        elif direction is Direction.SOUTH:
+        if direction.y > 0:
             self.move_down()
-        elif direction is Direction.NORTH:
+        elif direction.y < 0:
             self.move_up() 
         else:
             print("Unknown Direction.")
