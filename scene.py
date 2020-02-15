@@ -110,6 +110,7 @@ class Scene(league.game_objects.Drawable):
                 if c is not im:
                     c.blocks.add(im)
         player.blocks.add(self.impassable, self.__crates)
+        crate.blocks.add(self.__crates)
 
         # Move the player to the starting position.
         player.x = self.get_starting_x()

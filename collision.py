@@ -25,22 +25,8 @@ class Collision():
         diffX = self.source.rect.left - self.target.rect.left
         diffY = self.source.rect.top - self.target.rect.top
 
-        if abs(diffX) > abs(diffY):
-            if diffX > 0:
-                direction = Direction.EAST
-                tarDir = Direction.WEST
-            else:
-                direction = Direction.WEST
-                tarDir = Direction.EAST
-        else:
-            if diffY > 0:
-                direction = Direction.SOUTH
-                tarDir = Direction.NORTH
-            else:
-                direction = Direction.NORTH
-                tarDir = Direction.SOUTH
-        self.sourceDirection = direction
-        self.targetDirection = tarDir
+        self.sourceDirection = Vector3(diffX, diffY, 0)
+        self.targetDirection = Vector3(-diffX, -diffY, 0)
 
 class Collidable(Drawable):
 # Class that provides collision handling to other classes.

@@ -128,11 +128,15 @@ class Crate(Character, Collidable):
 
     def onCollision(self, collision, direction):
         #Quick and dirty movement code to test collision.
-        if direction is Direction.EAST:
-            self.move_right()
-        elif direction is Direction.WEST:
-            self.move_left()
-        elif direction is Direction.SOUTH:
-            self.move_down()
+        if abs(direction.x) > abs(direction.y):
+            if direction.x > 0:
+                self.move_right()
+            elif direction.x < 0:
+                self.move_left()
         else:
-            self.move_up()
+            if direction.y > 0:
+                self.move_down()
+            elif direction.y < 0:
+                self.move_up() 
+            else:
+                print("Unknown Direction.")
