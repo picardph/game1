@@ -20,7 +20,7 @@ class Player(Character, Collidable):
 
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
-        self.delta = 100
+        self.delta = 500
         # Where the player is positioned
         self.x = x
         self.y = y
@@ -95,16 +95,19 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
+        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction = "left")
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.x, self.y)
+        self.scene.addRanged(self.rect.x, self.rect.centery)
         pass
 
     def shoot_up(self):
+        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction = "up")
         pass
 
     def shoot_down(self):
+        self.scene.addRanged(self.rect.centerx, self.rect.y, direction = "down")
         pass
 
     def update(self):
