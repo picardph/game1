@@ -12,7 +12,7 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, scene, z=0, x=0, y=0, image='assets/norris.png'):
+    def __init__(self, scene, z=0, x=0, y=0, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
@@ -20,17 +20,38 @@ class Player(Character, Collidable):
 
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
-        self.delta = 500
+        self.delta = 100
         # Where the player is positioned
         self.x = x
         self.y = y
         # The image to use.  This will change frequently
         # in an animated Player class.
+
+        self.idleImages = []
+
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png')
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f1.png')
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f2.png')
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f3.png')
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f4.png')
+        self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f5.png')
+
+        self.runImages = []
+
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f0.png')
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f1.png')
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f2.png')
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f3.png')
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f4.png')
+        self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f5.png')
+
+        self.index = 0
+        self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect()
-        # How big the world is, so we can check for boundries
+        # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
-        # What sprites am I not allowd to cross?
+        # What sprites am I not allowed to cross?
         self.blocks = pygame.sprite.Group()
         # Which collision detection function?
         self.collide_function = pygame.sprite.collide_circle
@@ -95,24 +116,26 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
-        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction = "left")
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.rect.x, self.rect.centery)
+        self.scene.addRanged(self.x, self.y)
         pass
 
     def shoot_up(self):
-        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction = "up")
         pass
 
     def shoot_down(self):
-        self.scene.addRanged(self.rect.centerx, self.rect.y, direction = "down")
         pass
 
     def update(self):
         self.rect.x = self.x
         self.rect.y = self.y
+        self.index = (self.index + 1) % len(self.idleImages)
+        self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
+        pygame.transform.scale(self.image, (64,64))
+
+
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x
@@ -122,18 +145,16 @@ class Player(Character, Collidable):
 
     def onCollision(self, collision, direction):
        #Quick and dirty movement code to test collision.
-        if abs(direction.x) > abs(direction.y):
-            if direction.x > 0:
-                self.move_right()
-            elif direction.x < 0:
-                self.move_left()
+        if direction is Direction.EAST:
+            self.move_right()
+        elif direction is Direction.WEST:
+            self.move_left()
+        elif direction is Direction.SOUTH:
+            self.move_down()
+        elif direction is Direction.NORTH:
+            self.move_up() 
         else:
-            if direction.y > 0:
-                self.move_down()
-            elif direction.y < 0:
-                self.move_up() 
-            else:
-                print("Unknown Direction.")
+            print("Unknown Direction.")
 
 
     def ouch(self):
