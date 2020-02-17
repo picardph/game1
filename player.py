@@ -137,19 +137,7 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
-        if abs(direction.x) > abs(direction.y):
-            if direction.x > 0:
-                self.move(Vector3())
-            elif direction.x < 0:
-                self.move_left()
-                #TODO Change the things to vectors.
-        else:
-            if direction.y > 0:
-                self.move_down()
-            elif direction.y < 0:
-                self.move_up() 
-            else:
-                print("Unknown Direction.")
+        self.move(direction.normalize())
 
 
     def ouch(self):
