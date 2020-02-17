@@ -4,8 +4,6 @@ class Torch(pygame.sprite.Sprite):
     def __init__(self):
         super(Torch, self).__init__()
 
-
-
         self.images = []
 
         self.images.append('assets/v1.1 dungeon crawler 16x16 pixel pack/props_itens/torch_anim_f0.png')
@@ -22,7 +20,7 @@ class Torch(pygame.sprite.Sprite):
         self.current_time = 0
 
     #updates based on clock tick
-    def update(self, dt):
+    def update(self):
 
         self.current_time += dt
         if self.current_time >= self.animation_time:

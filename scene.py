@@ -30,8 +30,7 @@ class Scene(league.game_objects.Drawable):
         data = json.loads(file.read())
         file.close()
 
-        # Clock so we can animate sprites based on time instead of frame.
-        clock = pygame.time.Clock()
+
 
         self.__engine = engine
         self.__width = data['width']

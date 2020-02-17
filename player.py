@@ -27,6 +27,12 @@ class Player(Character, Collidable):
         # The image to use.  This will change frequently
         # in an animated Player class.
 
+        #flag to tell us if we need to flip image or not
+        self.setFlip = False
+
+        #flag to tell us if player is moving
+        self.isMoving = False
+
         self.idleImages = []
 
         self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png')
@@ -72,6 +78,8 @@ class Player(Character, Collidable):
         self.scene = scene
 
     def move_left(self):
+        self.setFlip = True
+        self.isMoving = True
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x - amount < 0:
@@ -79,10 +87,15 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x - amount
                 self.update(0)
+                self.isMoving = False
+
         except:
             pass
 
     def move_right(self):
+        self.setFlip = False
+        self.isMoving = True
+
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.x + amount > self.world_size[0] - Settings.tile_size:
@@ -90,10 +103,14 @@ class Player(Character, Collidable):
             else:
                 self.x = self.x + amount
                 self.update(0)
+                self.isMoving = False
+
         except:
             pass
 
     def move_up(self):
+        self.isMoving = True
+
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y - amount < 0:
@@ -101,10 +118,13 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y - amount
                 self.update(0)
+                self.isMoving = False
+
         except:
             pass
 
     def move_down(self):
+        self.isMoving = True
         amount = self.delta * Updateable.gameDeltaTime
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
@@ -112,6 +132,7 @@ class Player(Character, Collidable):
             else:
                 self.y = self.y + amount
                 self.update(0)
+                self.isMoving = False
         except:
             pass
 
@@ -132,9 +153,15 @@ class Player(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
-        self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
-        pygame.transform.scale(self.image, (64,64))
+        if self.isMoving == False:
+            self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
+        elif self.isMoving == True:
+            self.image = pygame.image.load(self.runImages[self.index]).convert_alpha()
+            self.isMoving = False
 
+        self.image = pygame.transform.scale(self.image, (32, 32))
+        if self.setFlip == True:
+            self.image = pygame.transform.flip(self.image, True, False)
 
         for sprite in self.blocks:
             if sprite is not self:
@@ -155,6 +182,7 @@ class Player(Character, Collidable):
             self.move_up() 
         else:
             print("Unknown Direction.")
+
 
 
     def ouch(self):
