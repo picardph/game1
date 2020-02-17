@@ -77,62 +77,20 @@ class Player(Character, Collidable):
 
         self.scene = scene
 
-    def move_left(self):
-        self.setFlip = True
-        self.isMoving = True
-        amount = self.delta * Updateable.gameDeltaTime
+    def move(self, direction):
+        amount = self.delta * Updateable.gameDeltaTime * direction
         try:
-            if self.x - amount < 0:
-                raise OffScreenLeftException
-            else:
-                self.x = self.x - amount
-                self.update(0)
-                self.isMoving = False
-
-        except:
-            pass
-
-    def move_right(self):
-        self.setFlip = False
-        self.isMoving = True
-
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.x + amount > self.world_size[0] - Settings.tile_size:
+            if self.x + amount.x < 0:
+                raise OffScreenLeftException            
+            elif self.x + amount.x > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
-            else:
-                self.x = self.x + amount
-                self.update(0)
-                self.isMoving = False
-
-        except:
-            pass
-
-    def move_up(self):
-        self.isMoving = True
-
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.y - amount < 0:
+            elif self.y + amount.y < 0:
                 raise OffScreenTopException
-            else:
-                self.y = self.y - amount
-                self.update(0)
-                self.isMoving = False
-
-        except:
-            pass
-
-    def move_down(self):
-        self.isMoving = True
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.y + amount > self.world_size[1] - Settings.tile_size:
+            elif self.y + amount.y > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
             else:
-                self.y = self.y + amount
-                self.update(0)
-                self.isMoving = False
+                self.x += amount.x
+                self.y += amount.y
         except:
             pass
 
@@ -153,6 +111,14 @@ class Player(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
+
+        #If player's direction is not 0, 0, 0, player is moving.
+        if self.direction != Vector3(0,0,0):
+            self.isMoving = False
+        else:
+            self.isMoving = True
+
+        #Load animations based on movement state.
         if self.isMoving == False:
             self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
         elif self.isMoving == True:
@@ -173,9 +139,10 @@ class Player(Character, Collidable):
     def onCollision(self, collision, direction):
         if abs(direction.x) > abs(direction.y):
             if direction.x > 0:
-                self.move_right()
+                self.move(Vector3())
             elif direction.x < 0:
                 self.move_left()
+                #TODO Change the things to vectors.
         else:
             if direction.y > 0:
                 self.move_down()
@@ -198,8 +165,10 @@ class Player(Character, Collidable):
                 # Ideally these would be stored in a constants file but it works for now.
                 if event.key == pygame.K_RIGHT:
                     self.direction.x = 1
+                    self.setFlip = False
                 if event.key == pygame.K_LEFT:
                     self.direction.x = -1
+                    self.setFlip = True
                 if event.key == pygame.K_UP:
                     self.direction.y = -1
                 if event.key == pygame.K_DOWN:
