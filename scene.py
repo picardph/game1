@@ -34,7 +34,7 @@ class Scene(league.game_objects.Drawable):
 
 
 
-        self.__engine = engine
+        self.engine = engine
         self.__width = data['width']
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]

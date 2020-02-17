@@ -111,12 +111,14 @@ class Player(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
+        self.handleInput()
 
         #If player's direction is not 0, 0, 0, player is moving.
         if self.direction != Vector3(0,0,0):
-            self.isMoving = False
-        else:
             self.isMoving = True
+            self.move(self.direction)
+        else:
+            self.isMoving = False
 
         #Load animations based on movement state.
         if self.isMoving == False:
@@ -148,7 +150,7 @@ class Player(Character, Collidable):
 
     #This might be able to be broken up into methods.
     def handleInput(self):
-        for event in pygame.event.get():
+        for event in self.scene.engine.gameEvents:
             if event.type == pygame.KEYDOWN:
                 # Ideally these would be stored in a constants file but it works for now.
                 if event.key == pygame.K_RIGHT:
@@ -161,7 +163,9 @@ class Player(Character, Collidable):
                     self.direction.y = -1
                 if event.key == pygame.K_DOWN:
                     self.direction.y = 1
-                self.direction = self.direction.normalize()
+                #TODO see why even when check passes, normalize thinks the vector has length 0.
+                #if self.direction.length != 0:
+                #    self.direction = self.direction.normalize()
 
             if event.type == pygame.KEYUP:
                 # Ideally these would be stored in a constants file but it works for now.
@@ -173,7 +177,9 @@ class Player(Character, Collidable):
                     self.direction.y = 0
                 if event.key == pygame.K_DOWN:
                     self.direction.y = 0
-                self.direction = self.direction.normalize()
+               #TODO see why even when check passes, normalize thinks the vector has length 0.
+               # if self.direction.length != 0:
+                #    self.direction = self.direction.normalize()
 
 
 
