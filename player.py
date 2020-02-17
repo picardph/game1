@@ -1,6 +1,7 @@
 from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
+from pygame import Vector3
 import pygame
 from range_shot import Ranged_Shot
 
@@ -22,6 +23,9 @@ class Player(Character, Collidable):
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 100
+
+        # The direction the player is facing. Should be a unit vector.
+        self.direction = Vector3(0, 0, 0)
 
         #flag to tell us if we need to flip image or not
         self.setFlip = False
@@ -186,3 +190,33 @@ class Player(Character, Collidable):
         if now - self.last_hit > 1000:
             self.health = self.health - 10
             self.last_hit = now
+
+    #This might be able to be broken up into methods.
+    def handleInput(self):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                # Ideally these would be stored in a constants file but it works for now.
+                if event.key == pygame.K_RIGHT:
+                    self.direction.x = 1
+                if event.key == pygame.K_LEFT:
+                    self.direction.x = -1
+                if event.key == pygame.K_UP:
+                    self.direction.y = -1
+                if event.key == pygame.K_DOWN:
+                    self.direction.y = 1
+                self.direction = self.direction.normalize()
+
+            if event.type == pygame.KEYUP:
+                # Ideally these would be stored in a constants file but it works for now.
+                if event.key == pygame.K_RIGHT:
+                    self.direction.x = 0
+                if event.key == pygame.K_LEFT:
+                    self.direction.x = 0
+                if event.key == pygame.K_UP:
+                    self.direction.y = 0
+                if event.key == pygame.K_DOWN:
+                    self.direction.y = 0
+                self.direction = self.direction.normalize()
+
+
+
