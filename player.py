@@ -12,8 +12,9 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, scene, z=0, x=0, y=0, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
-        super().__init__(z, x, y)
+    def __init__(self, scene, *args, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
+        
+        super().__init__(args)
         # This unit's health
         self.health = 100
         # Last time I was hit
@@ -21,11 +22,6 @@ class Player(Character, Collidable):
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 100
-        # Where the player is positioned
-        self.x = x
-        self.y = y
-        # The image to use.  This will change frequently
-        # in an animated Player class.
 
         #flag to tell us if we need to flip image or not
         self.setFlip = False
