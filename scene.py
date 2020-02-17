@@ -29,6 +29,8 @@ class Scene(league.game_objects.Drawable):
         file = open(folder + "/data.json", "r")
         data = json.loads(file.read())
         file.close()
+        pygame.mixer.music.load('assets/Music/D1ST0RT.wav')
+        pygame.mixer.music.play(-1)
 
 
 
