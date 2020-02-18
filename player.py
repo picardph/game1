@@ -1,3 +1,5 @@
+
+
 from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
@@ -12,8 +14,11 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
-    def __init__(self, scene, z=0, x=0, y=0, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
-        super().__init__(z, x, y)
+
+    def __init__(self, scene, *args,
+                 image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
+
+        super().__init__(args)
         # This unit's health
         self.health = 100
         # Last time I was hit
@@ -21,16 +26,11 @@ class Player(Character, Collidable):
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
         self.delta = 100
-        # Where the player is positioned
-        self.x = x
-        self.y = y
-        # The image to use.  This will change frequently
-        # in an animated Player class.
 
-        #flag to tell us if we need to flip image or not
+        # flag to tell us if we need to flip image or not
         self.setFlip = False
 
-        #flag to tell us if player is moving
+        # flag to tell us if player is moving
         self.isMoving = False
 
         self.idleImages = []
@@ -72,8 +72,8 @@ class Player(Character, Collidable):
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
         # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf',32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
 
@@ -137,16 +137,19 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
+        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left")
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.x, self.y)
+        self.scene.addRanged(self.rect.x, self.rect.centery)
         pass
 
     def shoot_up(self):
+        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up")
         pass
 
     def shoot_down(self):
+        self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down")
         pass
 
     def update(self):
@@ -171,19 +174,18 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
-       #Quick and dirty movement code to test collision.
-        if direction is Direction.EAST:
-            self.move_right()
-        elif direction is Direction.WEST:
-            self.move_left()
-        elif direction is Direction.SOUTH:
-            self.move_down()
-        elif direction is Direction.NORTH:
-            self.move_up() 
+        if abs(direction.x) > abs(direction.y):
+            if direction.x > 0:
+                self.move_right()
+            elif direction.x < 0:
+                self.move_left()
         else:
-            print("Unknown Direction.")
-
-
+            if direction.y > 0:
+                self.move_down()
+            elif direction.y < 0:
+                self.move_up()
+            else:
+                print("Unknown Direction.")
 
     def ouch(self):
         now = pygame.time.get_ticks()
