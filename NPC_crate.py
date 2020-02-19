@@ -51,66 +51,20 @@ class Crate(Character, Collidable):
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
 
-    def move_left(self):
-        self.collisions = []
-        amount = self.delta * Updateable.gameDeltaTime
+    def move(self, direction):
+        amount = self.delta * Updateable.gameDeltaTime * direction
         try:
-            if self.x - amount < 0:
-                raise OffScreenLeftException
-            else:
-                self.x = self.x - amount
-                self.update(0)
-                if len(self.collisions) != 0:
-                    self.x = self.x + amount
-                    self.update(0)
-                    self.collisions = []
-        except:
-            pass
-
-    def move_right(self):
-        self.collisions = []
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.x + amount > self.world_size[0] - Settings.tile_size:
+            if self.x + amount.x < 0:
+                raise OffScreenLeftException            
+            elif self.x + amount.x > self.world_size[0] - Settings.tile_size:
                 raise OffScreenRightException
-            else:
-                self.x = self.x + amount
-                self.update(0)
-                if len(self.collisions) != 0:
-                    self.x = self.x - amount
-                    self.update(0)
-                    self.collisions = []
-        except:
-            pass
-
-    def move_up(self):
-        self.collisions = []
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.y - amount < 0:
+            elif self.y + amount.y < 0:
                 raise OffScreenTopException
-            else:
-                self.y = self.y - amount
-                self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y + amount
-                    self.update(0)
-                    self.collisions = []
-        except:
-            pass
-
-    def move_down(self):
-        amount = self.delta * Updateable.gameDeltaTime
-        try:
-            if self.y + amount > self.world_size[1] - Settings.tile_size:
+            elif self.y + amount.y > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
             else:
-                self.y = self.y + amount
-                self.update(0)
-                if len(self.collisions) != 0:
-                    self.y = self.y - amount
-                    self.update(0)
-                    self.collisions = []
+                self.x += amount.x
+                self.y += amount.y
         except:
             pass
 
@@ -127,16 +81,8 @@ class Crate(Character, Collidable):
         
 
     def onCollision(self, collision, direction):
-        #Quick and dirty movement code to test collision.
-        if abs(direction.x) > abs(direction.y):
-            if direction.x > 0:
-                self.move_right()
-            elif direction.x < 0:
-                self.move_left()
+        if(abs(direction.x) > abs(direction.y)):
+            direction.y = 0
         else:
-            if direction.y > 0:
-                self.move_down()
-            elif direction.y < 0:
-                self.move_up() 
-            else:
-                print("Unknown Direction.")
+            direction.x = 0
+        self.move(direction.normalize())

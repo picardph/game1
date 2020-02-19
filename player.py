@@ -139,6 +139,10 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
+        if(abs(direction.x) > abs(direction.y)):
+            direction.y = 0
+        else:
+            direction.x = 0
         self.move(direction.normalize())
 
 
