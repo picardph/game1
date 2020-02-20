@@ -156,8 +156,13 @@ class Player(Character, Collidable):
         if now - self.last_hit > 1000:
             self.health = self.health - 10
             self.last_hit = now
+            if self.health <= 0:
+                self.onDeath
 
-    #This might be able to be broken up into methods.
+    def onDeath(self):
+        #TODO handle player death.
+        pass
+
     def handleInput(self):
         for event in self.scene.engine.gameEvents:
             if event.type == pygame.KEYDOWN:
