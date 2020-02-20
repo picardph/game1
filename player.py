@@ -18,9 +18,13 @@ class Player(Character, Collidable):
         super().__init__(args)
         # This unit's health
         self.health = 100
-        # Last time I was hit
 
+        # This unit's max health
+        self.maxHealth = 100
+
+        # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
+
         # A unit-less value.  Bigger is faster.
         self.delta = 100
 
@@ -140,6 +144,11 @@ class Player(Character, Collidable):
         else:
             direction.x = 0
         self.move(direction.normalize())
+
+        #For testing health.
+        #TODO Check for object type
+
+        self.ouch()
 
 
     def ouch(self):
