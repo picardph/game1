@@ -57,20 +57,16 @@ class Player(Character, Collidable):
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
+        
         # What sprites am I not allowed to cross?
         self.blocks = pygame.sprite.Group()
+
         # Which collision detection function?
-        self.collide_function = pygame.sprite.collide_circle
-        self.collisions = []
-        # For collision detection, we need to compare our sprite
-        # with collideable sprites.  However, we have to remap
-        # the collideable sprites coordinates since they change.
-        # For performance reasons I created this sprite so we
-        # don't have to create more memory each iteration of
-        # collision detection.
+        self.collide_function = pygame.sprite.collide_rect
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
+        
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
