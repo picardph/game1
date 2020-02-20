@@ -3,6 +3,7 @@ import league
 import json
 import enum
 import NPC_crate
+from overlay import Overlay
 import range_shot
 from player import Player
 
@@ -62,6 +63,11 @@ class Scene(league.game_objects.Drawable):
 
         engine.objects.append(player)
         engine.drawables.add(player)
+
+        #Add overlay to engine
+        overlay = Overlay(player)
+        engine.objects.append(overlay)
+        engine.drawables.add(overlay)
 
         # Fill out the scene's data with information by reading pixels from
         # an image.
