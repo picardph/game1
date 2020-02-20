@@ -58,7 +58,9 @@ class Player(Character, Collidable):
         self.index = 0
         self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale2x(self.image)
         self.rect = self.image.get_rect()
+
         # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
         
@@ -123,13 +125,13 @@ class Player(Character, Collidable):
         #Load animations based on movement state.
         if self.isMoving == False:
             self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
-        elif self.isMoving == True:
+        else:
             self.image = pygame.image.load(self.runImages[self.index]).convert_alpha()
-            self.isMoving = False
 
-        self.image = pygame.transform.scale(self.image, (32, 32))
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
+
+        self.image = pygame.transform.scale2x(self.image)
 
         for sprite in self.blocks:
             if sprite is not self:
