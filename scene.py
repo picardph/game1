@@ -64,10 +64,11 @@ class Scene(league.game_objects.Drawable):
         engine.objects.append(player)
         engine.drawables.add(player)
 
-        #Add overlay to engine
-        overlay = Overlay(player)
-        engine.objects.append(overlay)
-        engine.drawables.add(overlay)
+        #Add overlay to scene
+        self.overlay = Overlay(player)
+
+        engine.objects.append(self.overlay)
+        engine.drawables.add(self.overlay)
 
         # Fill out the scene's data with information by reading pixels from
         # an image.
