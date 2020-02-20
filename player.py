@@ -161,6 +161,8 @@ class Player(Character, Collidable):
                 self.onDeath
                 
     def heal(self, amount):
+        if amount <= 0:
+            pass
         self.health += amount
         if self.health > self.maxHealth:
             self.health = self.maxHealth
