@@ -156,8 +156,15 @@ class Player(Character, Collidable):
         if now - self.last_hit > 1000:
             self.health = self.health - 10
             self.last_hit = now
+            self.scene.overlay.healthChange()
             if self.health <= 0:
                 self.onDeath
+                
+    def heal(self, amount):
+        self.health += amount
+        if self.health > self.maxHealth:
+            self.health = self.maxHealth
+        self.scene.overlay.healthChange()
 
     def onDeath(self):
         #TODO handle player death.
