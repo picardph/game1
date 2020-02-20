@@ -127,7 +127,6 @@ class Player(Character, Collidable):
             self.image = pygame.image.load(self.runImages[self.index]).convert_alpha()
             self.isMoving = False
 
-        self.image = pygame.transform.scale(self.image, (32, 32))
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
 
