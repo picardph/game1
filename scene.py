@@ -43,8 +43,8 @@ class Scene(league.game_objects.Drawable):
         self.__pressure_plates = []
         self.__start_x = 0
         self.__start_y = 0
-        self.__end_x = 0
-        self.__end_y = 0
+        self.__end_x = -20
+        self.__end_y = -20
         self.__end_open = False
         self.__tile_images = {
             TileType.wall: pygame.image.load('assets/tiles/wall.png').convert(),
@@ -61,6 +61,8 @@ class Scene(league.game_objects.Drawable):
         player.world_size = world_size
         player.rect = player.image.get_rect()
         player._layer = 1
+
+        self.__player = player
 
         engine.objects.append(player)
         engine.drawables.add(player)
@@ -161,6 +163,10 @@ class Scene(league.game_objects.Drawable):
         for s in states:
             if not s:
                 return False
+        # Check that the player is by the door.
+        dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
+        if dist > 40:
+            return False
         return True
 
     def get_width(self):
