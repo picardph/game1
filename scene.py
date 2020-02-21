@@ -35,7 +35,7 @@ class Scene(league.game_objects.Drawable):
 
 
 
-        self.engine = engine
+        self.__engine = engine
         self.__width = data['width']
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
@@ -43,8 +43,8 @@ class Scene(league.game_objects.Drawable):
         self.__pressure_plates = []
         self.__start_x = 0
         self.__start_y = 0
-        self.__end_x = 0
-        self.__end_y = 0
+        self.__end_x = -20
+        self.__end_y = -20
         self.__end_open = False
         self.__tile_images = {
             TileType.wall: pygame.image.load('assets/tiles/wall.png').convert(),
@@ -61,6 +61,8 @@ class Scene(league.game_objects.Drawable):
         player.world_size = world_size
         player.rect = player.image.get_rect()
         player._layer = 1
+
+        self.__player = player
 
         engine.objects.append(player)
         engine.drawables.add(player)
@@ -161,6 +163,10 @@ class Scene(league.game_objects.Drawable):
         for s in states:
             if not s:
                 return False
+        # Check that the player is by the door.
+        dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
+        if dist > 40:
+            return False
         return True
 
     def get_width(self):
@@ -175,13 +181,14 @@ class Scene(league.game_objects.Drawable):
     def get_starting_y(self):
         return self.__start_y
 
-    def addRanged(self, x, y, direction = "right"):
-        bullet = range_shot.Ranged_Shot(0, x, y, self, direction)
+    def addRanged(self, x, y, direction = "right", melee = False):
+        bullet = range_shot.Ranged_Shot(0, x, y, self, direction, melee)
         bullet._layer = 1
         bullet.blocks.add(self.impassable, self.__crates)
         self.engine.objects.append(bullet)
         self.engine.drawables.add(bullet)
 
-    def removeBullet(self, bullet):
-        self.engine.objects.remove(bullet)
-        self.engine.drawables.remove(bullet)
+    def despawnObject(self, toDelete):
+
+        self.engine.objects.remove(toDelete)
+        self.engine.drawables.remove(toDelete)

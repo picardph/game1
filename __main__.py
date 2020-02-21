@@ -26,6 +26,19 @@ def update_callback():
         e.events[pygame.QUIT] = e.stop
 
 
+def reset_room():
+    global scene_index, scene, scene_list
+    e.drawables.empty()
+    e.objects.clear()
+    e.collisions.clear()
+    e.events.clear()
+
+    scene = Scene(e, scene_list[scene_index])
+    scene.layer = 0
+    e.drawables.add(scene)
+    e.events[pygame.QUIT] = e.stop
+
+
 if __name__ == "__main__":
     e = league.Engine('Knave Escape')
     e.init_pygame()
@@ -35,4 +48,5 @@ if __name__ == "__main__":
     e.drawables.add(scene)
 
     e.events[pygame.QUIT] = e.stop
+    e.key_events[pygame.K_r] = reset_room
     e.run(update_callback)
