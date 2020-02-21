@@ -1,3 +1,5 @@
+
+
 from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
@@ -13,6 +15,7 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
+
     def __init__(self, scene, *args, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
         
         super().__init__(args)
@@ -31,10 +34,11 @@ class Player(Character, Collidable):
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
 
-        #flag to tell us if we need to flip image or not
+
+        # flag to tell us if we need to flip image or not
         self.setFlip = False
 
-        #flag to tell us if player is moving
+        # flag to tell us if player is moving
         self.isMoving = False
 
         self.idleImages = []
@@ -74,8 +78,8 @@ class Player(Character, Collidable):
         self.collider.rect = self.collider.image.get_rect()
         
         # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf',32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
 
@@ -97,16 +101,19 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
+        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left")
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.x, self.y)
+        self.scene.addRanged(self.rect.x, self.rect.centery)
         pass
 
     def shoot_up(self):
+        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up")
         pass
 
     def shoot_down(self):
+        self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down")
         pass
 
     def update(self):
@@ -141,6 +148,7 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
+
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
@@ -205,6 +213,4 @@ class Player(Character, Collidable):
                #TODO see why even when check passes, normalize thinks the vector has length 0.
                # if self.direction.length != 0:
                 #    self.direction = self.direction.normalize()
-
-
 
