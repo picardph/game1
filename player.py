@@ -62,7 +62,6 @@ class Player(Character, Collidable):
         self.index = 0
         self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale2x(self.image)
         self.rect = self.image.get_rect()
 
         # How big the world is, so we can check for boundaries
@@ -137,8 +136,6 @@ class Player(Character, Collidable):
 
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
-
-        self.image = pygame.transform.scale2x(self.image)
 
         for sprite in self.blocks:
             if sprite is not self:
