@@ -43,6 +43,7 @@ class Engine:
         self.visible_statistics = False
         self.statistics_font = None
         self.collisions = {}
+        self.gameEvents = []
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -141,12 +142,14 @@ class Engine:
     # it works as long as you don't want multiple functions
     # to be called per event.
     def handle_inputs(self):
-        for event in pygame.event.get():
+        self.gameEvents = pygame.event.get()
+        for event in self.gameEvents:
             # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)
             # Check if these key_event keys were pressed
             if event.type == pygame.KEYDOWN:
                 if event.key in self.key_events.keys():
-                    self.key_events[event.key]() 
+                    self.key_events[event.key]()
+            
 
