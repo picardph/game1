@@ -35,7 +35,7 @@ class Scene(league.game_objects.Drawable):
 
 
 
-        self.engine = engine
+        self.__engine = engine
         self.__width = data['width']
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
@@ -160,13 +160,14 @@ class Scene(league.game_objects.Drawable):
     def get_starting_y(self):
         return self.__start_y
 
-    def addRanged(self, x, y, direction = "right"):
-        bullet = range_shot.Ranged_Shot(0, x, y, self, direction)
+    def addRanged(self, x, y, direction = "right", melee = False):
+        bullet = range_shot.Ranged_Shot(0, x, y, self, direction, melee)
         bullet._layer = 1
         bullet.blocks.add(self.impassable, self.__crates)
         self.engine.objects.append(bullet)
         self.engine.drawables.add(bullet)
 
-    def removeBullet(self, bullet):
-        self.engine.objects.remove(bullet)
-        self.engine.drawables.remove(bullet)
+    def despawnObject(self, toDelete):
+
+        self.engine.objects.remove(toDelete)
+        self.engine.drawables.remove(toDelete)
