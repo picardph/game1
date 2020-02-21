@@ -66,7 +66,7 @@ class Engine:
         # Create statistics font
         self.statistics_font = pygame.font.Font(None,30)
 
-    def run(self):
+    def run(self, update_callback):
         """The main game loop.  As close to our book code as possible."""
         self.running = True
         while self.running:
@@ -98,7 +98,9 @@ class Engine:
             # Show statistics?
             if self.visible_statistics:
                 self.show_statistics()
-            
+
+            update_callback()
+
             # Could keep track of rectangles and update here, but eh.
             pygame.display.flip()
 

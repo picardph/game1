@@ -33,12 +33,12 @@ class Scene(league.game_objects.Drawable):
         pygame.mixer.music.play(-1)
 
 
-
         self.__engine = engine
         self.__width = data['width']
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
         self.__crates = []
+        self.__pressure_plates = []
         self.__start_x = 0
         self.__start_y = 0
         self.__end_x = 0
@@ -103,6 +103,7 @@ class Scene(league.game_objects.Drawable):
                     self.__background[x][y] = TileType.end
                 elif color == TileType.pressure_plate.value:
                     self.__background[x][y] = TileType.pressure_plate
+                    self.__pressure_plates.append((x * TILE_WIDTH, y * TILE_HEIGHT))
 
         # Pre-render that data to a surface to save performance.
         self.image = self.render_background()
@@ -114,7 +115,8 @@ class Scene(league.game_objects.Drawable):
                 if c is not im:
                     c.blocks.add(im)
         player.blocks.add(self.impassable, self.__crates)
-        crate.blocks.add(self.__crates)
+        for c in self.__crates:
+            c.blocks.add(self.__crates)
 
         # Move the player to the starting position.
         player.x = self.get_starting_x()
@@ -141,10 +143,21 @@ class Scene(league.game_objects.Drawable):
         return background
 
     def is_puzzle_finished(self):
-        for x in range(0, self.get_width()):
-            for y in range(0, self.get_height()):
-                pass
-        return False
+        # Check every pressure plate and check that a crate is on it.
+        states = [False for p in self.__pressure_plates]
+        idx = 0
+        for plate in self.__pressure_plates:
+            for crate in self.__crates:
+                plate_vec = pygame.Vector2(plate)
+                crate_vec = pygame.Vector2((crate.x, crate.y))
+                dist = plate_vec.distance_to(crate_vec)
+                if dist < 16:
+                    states[idx] = True
+            idx += 1
+        for s in states:
+            if not s:
+                return False
+        return True
 
     def get_width(self):
         return self.__width
