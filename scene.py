@@ -11,6 +11,42 @@ from player import Player
 TILE_WIDTH = league.settings.Settings.tile_size
 TILE_HEIGHT = league.settings.Settings.tile_size
 
+global e
+e = None
+
+global scene, scene_index, scene_list
+
+scene_index = 0
+scene = None
+scene_list = ['assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/beat']
+
+
+def update_callback():
+    global scene_index, scene, scene_list
+    if scene.is_puzzle_finished():
+        scene_index += 1
+        e.drawables.empty()
+        e.objects.clear()
+        e.collisions.clear()
+        e.events.clear()
+
+        scene = Scene(e, scene_list[scene_index])
+        scene.layer = 0
+        e.drawables.add(scene)
+        e.events[pygame.QUIT] = e.stop
+
+def reset_room():
+    global scene_index, scene, scene_list
+    e.drawables.empty()
+    e.objects.clear()
+    e.collisions.clear()
+    e.events.clear()
+
+    scene = Scene(e, scene_list[scene_index])
+    scene.layer = 0
+    e.drawables.add(scene)
+    e.events[pygame.QUIT] = e.stop
+
 
 class TileType(enum.Enum):
     empty = pygame.Color(255, 255, 255)                 # Empty
@@ -33,7 +69,8 @@ class Scene(league.game_objects.Drawable):
         pygame.mixer.music.load('assets/Music/D1ST0RT.wav')
         pygame.mixer.music.play(-1)
 
-
+        global e
+        e = engine
 
         self.__engine = engine
         self.__width = data['width']
