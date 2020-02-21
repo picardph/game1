@@ -17,8 +17,7 @@ class Overlay(league.DUGameObject):
         self.image = self.image.convert_alpha()
         self.image.fill((100,100,100, 0))
 
-        self.uiHealthFrame = pygame.image.load('assets/v1.1 dungeon crawler 16x16 pixel pack/ui (new)/health_ui.png')
-        self.uiHealthFrame = pygame.transform.scale2x(self.uiHealthFrame)
+        self.uiHealthFrame = pygame.image.load('assets/v1.1 dungeon crawler 16x16 pixel pack/ui (new)/health_ui.png') 
 
         pygame.draw.rect(self.image, self.hpColor, self.hpRect)
         self.image.blit(self.uiHealthFrame, (0, 0))
