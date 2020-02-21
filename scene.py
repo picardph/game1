@@ -135,11 +135,6 @@ class Scene(league.game_objects.Drawable):
         engine.key_events[pygame.K_w] = player.shoot_up
         engine.key_events[pygame.K_s] = player.shoot_down
 
-        engine.key_events[pygame.K_LEFT] = player.move_left
-        engine.key_events[pygame.K_RIGHT] = player.move_right
-        engine.key_events[pygame.K_UP] = player.move_up
-        engine.key_events[pygame.K_DOWN] = player.move_down
-
 
     def render_background(self):
         background = pygame.Surface((self.__width * TILE_WIDTH, self.__height * TILE_HEIGHT))
