@@ -3,6 +3,7 @@ import league
 import json
 import enum
 import NPC_crate
+from overlay import Overlay
 import range_shot
 from player import Player
 
@@ -34,7 +35,7 @@ class Scene(league.game_objects.Drawable):
 
 
 
-        self.__engine = engine
+        self.engine = engine
         self.__width = data['width']
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
@@ -62,6 +63,12 @@ class Scene(league.game_objects.Drawable):
 
         engine.objects.append(player)
         engine.drawables.add(player)
+
+        #Add overlay to scene
+        self.overlay = Overlay(player)
+
+        engine.objects.append(self.overlay)
+        engine.drawables.add(self.overlay)
 
         # Fill out the scene's data with information by reading pixels from
         # an image.
@@ -124,11 +131,6 @@ class Scene(league.game_objects.Drawable):
         engine.key_events[pygame.K_d] = player.shoot_right
         engine.key_events[pygame.K_w] = player.shoot_up
         engine.key_events[pygame.K_s] = player.shoot_down
-
-        engine.key_events[pygame.K_LEFT] = player.move_left
-        engine.key_events[pygame.K_RIGHT] = player.move_right
-        engine.key_events[pygame.K_UP] = player.move_up
-        engine.key_events[pygame.K_DOWN] = player.move_down
 
     def render_background(self):
         background = pygame.Surface((self.__width * TILE_WIDTH, self.__height * TILE_HEIGHT))

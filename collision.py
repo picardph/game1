@@ -12,15 +12,28 @@ class Collision():
         #The object collided with.
         self.target = target
 
+        self.isTrigger = False
+        
+        #Is either object a trigger?
+        if issubclass(type(source), Collidable):
+            self.isTrigger = source.isTrigger
+        if issubclass(type(target), Collidable):
+            self.isTrigger = target.isTrigger or self.isTrigger
+
         self.calcDirections()
 
         if issubclass(type(source), Collidable):
-            source.onCollision(self, self.sourceDirection)
-            #print(str(self.source) + "direction: " + str(self.sourceDirection))
+            if self.isTrigger:
+                source.onTrigger(self,self.sourceDirection)
+            else:
+                source.onCollision(self, self.sourceDirection)
+            
         if issubclass(type(target), Collidable):
-            target.onCollision(self, self.targetDirection)
-            #print(str(self.target) + " direction: " + str(self.targetDirection))
-
+            if self.isTrigger:
+                target.onTrigger(self, self.targetDirection)
+            else:
+                target.onCollision(self, self.targetDirection)
+            
     def calcDirections(self):
         diffX = self.source.rect.left - self.target.rect.left
         diffY = self.source.rect.top - self.target.rect.top
@@ -28,8 +41,25 @@ class Collision():
         self.sourceDirection = Vector3(diffX, diffY, 0)
         self.targetDirection = Vector3(-diffX, -diffY, 0)
 
+    def getOther(self, caller):
+        #Method that returns whichever object is not the one calling the method.
+        #Returns None if caller is neither object involved in collision.
+
+        if caller is self.source:
+            return self.target
+        elif caller is self.target:
+            return self.source
+        else:
+            return None
+
 class Collidable(Drawable):
 # Class that provides collision handling to other classes.
+    def __init__(self, *args, trigger=False):
+        super().__init__(args)
+        self.isTrigger = trigger
 
     def onCollision(self, collision, direction):
+        pass
+    
+    def onTrigger(self, collision, direction):
         pass
