@@ -41,6 +41,17 @@ class Collision():
         self.sourceDirection = Vector3(diffX, diffY, 0)
         self.targetDirection = Vector3(-diffX, -diffY, 0)
 
+    def getOther(self, caller):
+        #Method that returns whichever object is not the one calling the method.
+        #Returns None if caller is neither object involved in collision.
+
+        if caller is self.source:
+            return self.target
+        elif caller is self.target:
+            return self.source
+        else:
+            return None
+
 class Collidable(Drawable):
 # Class that provides collision handling to other classes.
     def __init__(self, *args, trigger=False):

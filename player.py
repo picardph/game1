@@ -1,3 +1,5 @@
+
+
 from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
@@ -13,24 +15,30 @@ class Player(Character, Collidable):
     moving, throwing/shooting, collisions, etc.  It was hastily
     written as a demo but should direction.
     """
+
     def __init__(self, scene, *args, image='assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png'):
         
         super().__init__(args)
         # This unit's health
         self.health = 100
-        # Last time I was hit
 
+        # This unit's max health
+        self.maxHealth = 100
+
+        # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
+
         # A unit-less value.  Bigger is faster.
         self.delta = 100
 
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
 
-        #flag to tell us if we need to flip image or not
+
+        # flag to tell us if we need to flip image or not
         self.setFlip = False
 
-        #flag to tell us if player is moving
+        # flag to tell us if player is moving
         self.isMoving = False
 
         self.idleImages = []
@@ -54,26 +62,24 @@ class Player(Character, Collidable):
         self.index = 0
         self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale2x(self.image)
         self.rect = self.image.get_rect()
+
         # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
+        
         # What sprites am I not allowed to cross?
         self.blocks = pygame.sprite.Group()
+
         # Which collision detection function?
-        self.collide_function = pygame.sprite.collide_circle
-        self.collisions = []
-        # For collision detection, we need to compare our sprite
-        # with collideable sprites.  However, we have to remap
-        # the collideable sprites coordinates since they change.
-        # For performance reasons I created this sprite so we
-        # don't have to create more memory each iteration of
-        # collision detection.
+        self.collide_function = pygame.sprite.collide_rect
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
+        
         # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf',32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
 
@@ -95,16 +101,19 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
+        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left")
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.x, self.y)
+        self.scene.addRanged(self.rect.x, self.rect.centery)
         pass
 
     def shoot_up(self):
+        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up")
         pass
 
     def shoot_down(self):
+        self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down")
         pass
 
     def update(self):
@@ -123,13 +132,13 @@ class Player(Character, Collidable):
         #Load animations based on movement state.
         if self.isMoving == False:
             self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
-        elif self.isMoving == True:
+        else:
             self.image = pygame.image.load(self.runImages[self.index]).convert_alpha()
-            self.isMoving = False
 
-        self.image = pygame.transform.scale(self.image, (32, 32))
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
+
+        self.image = pygame.transform.scale2x(self.image)
 
         for sprite in self.blocks:
             if sprite is not self:
@@ -139,11 +148,17 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
+
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
             direction.x = 0
         self.move(direction.normalize())
+
+        #For testing health.
+        #TODO Check for object type
+
+        self.ouch()
 
 
     def ouch(self):
@@ -151,8 +166,22 @@ class Player(Character, Collidable):
         if now - self.last_hit > 1000:
             self.health = self.health - 10
             self.last_hit = now
+            self.scene.overlay.healthChange()
+            if self.health <= 0:
+                self.onDeath
+                
+    def heal(self, amount):
+        if amount <= 0:
+            pass
+        self.health += amount
+        if self.health > self.maxHealth:
+            self.health = self.maxHealth
+        self.scene.overlay.healthChange()
 
-    #This might be able to be broken up into methods.
+    def onDeath(self):
+        #TODO handle player death.
+        pass
+
     def handleInput(self):
         for event in self.scene.engine.gameEvents:
             if event.type == pygame.KEYDOWN:
@@ -184,6 +213,4 @@ class Player(Character, Collidable):
                #TODO see why even when check passes, normalize thinks the vector has length 0.
                # if self.direction.length != 0:
                 #    self.direction = self.direction.normalize()
-
-
 
