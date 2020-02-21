@@ -28,8 +28,11 @@ class Player(Character, Collidable):
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
+        # Last time I attacked
+        self.last_shot = pygame.time.get_ticks()
+
         # A unit-less value.  Bigger is faster.
-        self.delta = 100
+        self.delta = 200
 
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
@@ -40,7 +43,7 @@ class Player(Character, Collidable):
 
         # flag to tell us if player is moving
         self.isMoving = False
-
+        self.usingMelee = False
         self.idleImages = []
 
         self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png')
@@ -100,19 +103,31 @@ class Player(Character, Collidable):
             pass
 
     def shoot_left(self):
-        self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left")
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > 250:
+            self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left", melee =self.usingMelee)
+            self.last_shot = now
         pass
 
     def shoot_right(self):
-        self.scene.addRanged(self.rect.x, self.rect.centery)
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > 250:
+            self.scene.addRanged(self.rect.x, self.rect.centery, melee =self.usingMelee)
+            self.last_shot = now
         pass
 
     def shoot_up(self):
-        self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up")
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > 250:
+            self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up", melee =self.usingMelee)
+            self.last_shot = now
         pass
 
     def shoot_down(self):
-        self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down")
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > 250:
+            self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down", melee =self.usingMelee)
+            self.last_shot = now
         pass
 
     def update(self):
@@ -178,6 +193,8 @@ class Player(Character, Collidable):
     def onDeath(self):
         #TODO handle player death.
         pass
+    def swap_weapons(self):
+        self.usingMelee = not self.usingMelee
 
     def handleInput(self):
         for event in self.scene.engine.gameEvents:
@@ -207,6 +224,8 @@ class Player(Character, Collidable):
                     self.direction.y = 0
                 if event.key == pygame.K_DOWN:
                     self.direction.y = 0
+                if event.key == pygame.K_SPACE:
+                    self.swap_weapons()
                #TODO see why even when check passes, normalize thinks the vector has length 0.
                # if self.direction.length != 0:
                 #    self.direction = self.direction.normalize()
