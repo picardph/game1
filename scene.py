@@ -230,6 +230,9 @@ class Scene(league.game_objects.Drawable):
             self.scene_not_done = False
         # Check that the player is by the door.
         dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
+        if self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] != TileType.open_end:
+            self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] = TileType.open_end
+            self.image = self.render_background()
         if dist > 40:
             return False
 
