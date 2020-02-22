@@ -74,6 +74,7 @@ class Scene(league.game_objects.Drawable):
         pygame.mixer.music.play(-1)
         self.scene_not_done = True
 
+        self.numEnemies = 0
         global e
         e = engine
 
@@ -190,6 +191,7 @@ class Scene(league.game_objects.Drawable):
                     c.blocks.add(im)
         for g in self.__enemies:
             g.blocks.add(self.impassable, self.__crates)
+            self.numEnemies += 1
         player.blocks.add(self.impassable, self.__crates, self.__enemies)
         for c in self.__crates:
             c.blocks.add(self.__crates, self.__enemies)
@@ -232,6 +234,8 @@ class Scene(league.game_objects.Drawable):
             if not s:
                 return False
 
+        if self.numEnemies > 0:
+            return False
         if self.scene_not_done:
             pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Victory/gmae.wav'))
             self.scene_not_done = False
@@ -270,6 +274,7 @@ class Scene(league.game_objects.Drawable):
             self.engine.drawables.remove(toDelete)
             if type(toDelete) is Enemy:
                 self.__enemies.remove(toDelete)
+                self.numEnemies -= 1
             if type(toDelete) is NPC_crate:
                 self.__crates.remove(toDelete)
             try:
