@@ -217,6 +217,7 @@ class Scene(league.game_objects.Drawable):
                 if dist < 16:
                     if not self.__pressure_plate_sounds[idx]:
                         # INSERT SOUND HERE!!!
+                        pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Scrape Effects/scrape-4.wav'))
                         pass
                     self.__pressure_plate_sounds[idx] = True
                     states[idx] = True
