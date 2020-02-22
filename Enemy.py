@@ -91,20 +91,8 @@ class Enemy(Character, Collidable):
 
         self.scene = scene
 
-<<<<<<< HEAD
     def move(self, direction):
         amount = self.delta * Updateable.gameDeltaTime * direction
-=======
-        # The direction the player is facing. Should be a unit vector.
-        self.direction = Vector3(0, 0, 0)
-
-        self.attackDirection = Vector3(0, 0, 0)
-
-    def move_left(self):
-        self.setFlip = True
-        self.isMoving = True
-        amount = self.delta * Updateable.gameDeltaTime
->>>>>>> master
         try:
             if self.x + amount.x < 0:
                 raise OffScreenLeftException            
