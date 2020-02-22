@@ -85,6 +85,7 @@ class Scene(league.game_objects.Drawable):
         self.__height = data['height']
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
         self.__crates = []
+        self.__enemies = []
         self.__pressure_plates = []
         self.__pressure_plate_sounds = []
         self.__start_x = 0
@@ -174,6 +175,8 @@ class Scene(league.game_objects.Drawable):
 
                     engine.objects.append(g)
                     engine.drawables.add(g)
+                    self.__enemies.append(g)
+                    self.impassable.add(g)
 
 
         # Pre-render that data to a surface to save performance.
@@ -185,9 +188,11 @@ class Scene(league.game_objects.Drawable):
             for im in self.impassable:
                 if c is not im:
                     c.blocks.add(im)
-        player.blocks.add(self.impassable, self.__crates)
+        for g in self.__enemies:
+            g.blocks.add(self.impassable, self.__crates)
+        player.blocks.add(self.impassable, self.__crates, self.__enemies)
         for c in self.__crates:
-            c.blocks.add(self.__crates)
+            c.blocks.add(self.__crates, self.__enemies)
 
         # Move the player to the starting position.
         player.x = self.get_starting_x()
@@ -260,6 +265,16 @@ class Scene(league.game_objects.Drawable):
         self.engine.drawables.add(bullet)
 
     def despawnObject(self, toDelete):
-
-        self.engine.objects.remove(toDelete)
-        self.engine.drawables.remove(toDelete)
+        try:
+            self.engine.objects.remove(toDelete)
+            self.engine.drawables.remove(toDelete)
+            if type(toDelete) is Enemy:
+                self.__enemies.remove(toDelete)
+            if type(toDelete) is NPC_crate:
+                self.__crates.remove(toDelete)
+            try:
+                self.impassable.remove(toDelete)
+            except:
+                pass
+        except:
+            pass
