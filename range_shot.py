@@ -22,12 +22,7 @@ class Ranged_Shot(Collidable):
         self.maxRange = 0
         self.moved = 0
         self.direction = direction
-
-        # If a zero vector is given, delete the projectile.
-        if direction.length == 0:
-            self.scene.despawnObject(self)
-            self.beenDeleted = True
-            return
+        self.delta *= self.direction
 
         if melee:
             self.maxRange = 50
@@ -69,7 +64,7 @@ class Ranged_Shot(Collidable):
         self.beenDeleted = False
 
     def update(self):
-        amount = self.delta * Updateable.gameDeltaTime * self.direction
+        amount = self.delta * Updateable.gameDeltaTime
         if self.melee:
             self.moved += amount.length()
             if self.moved >= self.maxRange:
@@ -90,6 +85,7 @@ class Ranged_Shot(Collidable):
         except:
             self.scene.despawnObject(self)
             self.beenDeleted = True
+            print("Objection!")
             return
 
         for sprite in self.blocks:
@@ -103,7 +99,8 @@ class Ranged_Shot(Collidable):
                         self.scene.despawnObject(self)
         self.rect.x = self.x
         self.rect.y = self.y
-
+        print("I'm a projectile doing my thing. Don't mind me.")
+        print(str(amount))
 
     def onCollision(self, collision, direction):
         try:
