@@ -169,11 +169,6 @@ class Scene(league.game_objects.Drawable):
         player.x = self.get_starting_x()
         player.y = self.get_starting_y()
 
-        engine.key_events[pygame.K_a] = player.shoot_left
-        engine.key_events[pygame.K_d] = player.shoot_right
-        engine.key_events[pygame.K_w] = player.shoot_up
-        engine.key_events[pygame.K_s] = player.shoot_down
-
 
     def render_background(self):
         background = pygame.Surface((self.__width * TILE_WIDTH, self.__height * TILE_HEIGHT))
@@ -218,7 +213,7 @@ class Scene(league.game_objects.Drawable):
     def get_starting_y(self):
         return self.__start_y
 
-    def addRanged(self, x, y, direction = "right", melee = False):
+    def addRanged(self, x, y, direction, melee = False):
         bullet = range_shot.Ranged_Shot(0, x, y, self, direction, melee)
         bullet._layer = 1
         bullet.blocks.add(self.impassable, self.__crates)
