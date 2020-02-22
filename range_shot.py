@@ -10,35 +10,23 @@ class Ranged_Shot(Collidable):
 
         super().__init__(z, x, y)
 
-        # movement speed
-        self.delta = 1000
-
         # crate position
         self.z = 0
         self.x = x
         self.y = y
-        self.image = pygame.image.load('./assets/right_shot.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (32,16))
+        self.image = None
         self.melee = melee
         self.maxRange = 0
         self.moved = 0
         self.direction = direction
-        self.delta *= self.direction
+        self.delta = self.direction * 750
         self.offset = 16
 
         if melee:
             self.maxRange = 50
-            self.delta = 500
-            if direction == "right":
-                self.image = pygame.image.load('./assets/right_slash.png').convert_alpha()
-            elif direction == "down":
-                self.image = pygame.image.load('./assets/down_slash.png').convert_alpha()
-            elif direction == "up":
-                self.image = pygame.image.load('./assets/up_slash.png').convert_alpha()
-            else:
-                self.image = pygame.image.load('./assets/left_slash.png').convert_alpha()
-        else:
-            self.imageSelect()
+            self.delta *= 0.75
+        
+        self.imageSelect()
 
         self.rect = self.image.get_rect()
         self.calcOffset()
@@ -61,8 +49,9 @@ class Ranged_Shot(Collidable):
 
     def update(self):
         amount = self.delta * Updateable.gameDeltaTime
+        print(str(amount))
         if self.melee:
-            self.moved += amount.length()
+            self.moved += amount.magnitude()
             if self.moved >= self.maxRange:
                 self.scene.despawnObject(self)
                 return
@@ -112,6 +101,13 @@ class Ranged_Shot(Collidable):
             pass
 
     def imageSelect(self):
+        if self.melee:
+            self.image = pygame.image.load('./assets/right_slash.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (32, 64))
+        else:
+            self.image = pygame.image.load('./assets/right_shot.png').convert_alpha()
+            self.image = pygame.transform.scale(self.image, (32,16))
+
         self.image = pygame.transform.rotate(self.image, Vector3(1,0,0).angle_to(self.direction))
         if self.direction.y == 1:
             self.image = pygame.transform.flip(self.image, False, True)
