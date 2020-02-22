@@ -37,12 +37,15 @@ class Player(Character, Collidable):
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
 
+        self.attackDirection = Vector3(0, 0, 0)
+
 
         # flag to tell us if we need to flip image or not
         self.setFlip = False
 
         # flag to tell us if player is moving
         self.isMoving = False
+        self.isAttacking = False
         self.usingMelee = False
         self.idleImages = []
 
@@ -102,33 +105,11 @@ class Player(Character, Collidable):
         except:
             pass
 
-    def shoot_left(self):
+    def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left", melee =self.usingMelee)
+            self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction, melee =self.usingMelee)
             self.last_shot = now
-        pass
-
-    def shoot_right(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.x, self.rect.centery, melee =self.usingMelee)
-            self.last_shot = now
-        pass
-
-    def shoot_up(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up", melee =self.usingMelee)
-            self.last_shot = now
-        pass
-
-    def shoot_down(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down", melee =self.usingMelee)
-            self.last_shot = now
-        pass
 
     def update(self):
         self.rect.x = self.x
@@ -142,6 +123,13 @@ class Player(Character, Collidable):
             self.move(self.direction)
         else:
             self.isMoving = False
+
+        # If the player's attackDirection is not 0, 0, 0, player is attacking.
+        if self.attackDirection != Vector3(0,0,0):
+            self.isAttacking = True
+            self.shoot(self.attackDirection)
+        else:
+            self.isAttacking = False
 
         #Load animations based on movement state.
         if self.isMoving == False:
@@ -193,6 +181,7 @@ class Player(Character, Collidable):
     def onDeath(self):
         #TODO handle player death.
         pass
+
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee
 
@@ -200,6 +189,8 @@ class Player(Character, Collidable):
         for event in self.scene.engine.gameEvents:
             if event.type == pygame.KEYDOWN:
                 # Ideally these would be stored in a constants file but it works for now.
+
+                # Movement
                 if event.key == pygame.K_RIGHT:
                     self.direction.x = 1
                     self.setFlip = False
@@ -214,8 +205,19 @@ class Player(Character, Collidable):
                 #if self.direction.length != 0:
                 #    self.direction = self.direction.normalize()
 
+                # Attack
+                if event.key == pygame.K_d:
+                    self.attackDirection.x = 1
+                if event.key == pygame.K_a:
+                    self.attackDirection.x = -1
+                if event.key == pygame.K_w:
+                    self.attackDirection.y = -1
+                if event.key == pygame.K_s:
+                    self.attackDirection.y = 1
+
             if event.type == pygame.KEYUP:
-                # Ideally these would be stored in a constants file but it works for now.
+                
+                # Movement release.
                 if event.key == pygame.K_RIGHT:
                     self.direction.x = 0
                 if event.key == pygame.K_LEFT:
@@ -226,7 +228,18 @@ class Player(Character, Collidable):
                     self.direction.y = 0
                 if event.key == pygame.K_SPACE:
                     self.swap_weapons()
-               #TODO see why even when check passes, normalize thinks the vector has length 0.
-               # if self.direction.length != 0:
-                #    self.direction = self.direction.normalize()
+                
+                # Attack release
+                if event.key == pygame.K_d:
+                    self.attackDirection.x = 0
+                if event.key == pygame.K_a:
+                    self.attackDirection.x = 0
+                if event.key == pygame.K_w:
+                    self.attackDirection.y = 0
+                if event.key == pygame.K_s:
+                    self.attackDirection.y = 0
+
+                # Weapon Switch
+                if event.key == pygame.K_SPACE:
+                    self.swap_weapons()
 
