@@ -66,8 +66,10 @@ class Scene(league.game_objects.Drawable):
         file = open(folder + "/data.json", "r")
         data = json.loads(file.read())
         file.close()
-        pygame.mixer.music.load('assets/Music/D1ST0RT.wav')
+        pygame.mixer.music.load('assets/Music/B0N3_J4NGL3.wav')
+        pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play(-1)
+
 
         global e
         e = engine

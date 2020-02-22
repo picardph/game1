@@ -46,6 +46,12 @@ class Player(Character, Collidable):
         self.usingMelee = False
         self.idleImages = []
 
+        self.soundEffects = []
+        self.soundEffects.append('assets/Music/Movement/footsteps/step_metal (3).ogg')
+        self.soundEffects.append('assets/Combat/Socapex - hurt.wav')
+        self.soundEffects.append('assets/Combat/105016__julien-matthey__jm-fx-fireball-01.wav')
+        self.soundEffects.append('assets/Combat/heavy_sword.wav')
+
         self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f0.png')
         self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f1.png')
         self.idleImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_idle_anim_f2.png')
@@ -86,6 +92,8 @@ class Player(Character, Collidable):
         self.scene = scene
 
     def move(self, direction):
+
+
         amount = self.delta * Updateable.gameDeltaTime * direction
         try:
             if self.x + amount.x < 0:
@@ -99,6 +107,9 @@ class Player(Character, Collidable):
             else:
                 self.x += amount.x
                 self.y += amount.y
+
+            pygame.mixer.Channel(0).play(pygame.mixer.Sound(self.soundEffects[0]))
+
         except:
             pass
 
@@ -106,6 +117,11 @@ class Player(Character, Collidable):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
             self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction="left", melee =self.usingMelee)
+            if self.usingMelee:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
+            else:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[2]))
+
             self.last_shot = now
         pass
 
@@ -113,6 +129,10 @@ class Player(Character, Collidable):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
             self.scene.addRanged(self.rect.x, self.rect.centery, melee =self.usingMelee)
+            if self.usingMelee:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
+            else:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[2]))
             self.last_shot = now
         pass
 
@@ -120,6 +140,10 @@ class Player(Character, Collidable):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
             self.scene.addRanged(self.rect.centerx, self.y - (self.rect.height), direction="up", melee =self.usingMelee)
+            if self.usingMelee:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
+            else:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[2]))
             self.last_shot = now
         pass
 
@@ -127,6 +151,10 @@ class Player(Character, Collidable):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
             self.scene.addRanged(self.rect.centerx, self.rect.y, direction="down", melee =self.usingMelee)
+            if self.usingMelee:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
+            else:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[2]))
             self.last_shot = now
         pass
 
@@ -170,10 +198,10 @@ class Player(Character, Collidable):
         #For testing health.
         #TODO Check for object type
 
-        self.ouch()
-
 
     def ouch(self):
+        pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
+
         now = pygame.time.get_ticks()
         if now - self.last_hit > 1000:
             self.health = self.health - 10
