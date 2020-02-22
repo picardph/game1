@@ -5,6 +5,7 @@ from league.game_objects import Updateable
 from collision import Collision, Collidable
 from pygame import Vector3
 import pygame
+from pygame import Vector3
 from range_shot import Ranged_Shot
 
 
@@ -90,8 +91,20 @@ class Enemy(Character, Collidable):
 
         self.scene = scene
 
+<<<<<<< HEAD
     def move(self, direction):
         amount = self.delta * Updateable.gameDeltaTime * direction
+=======
+        # The direction the player is facing. Should be a unit vector.
+        self.direction = Vector3(0, 0, 0)
+
+        self.attackDirection = Vector3(0, 0, 0)
+
+    def move_left(self):
+        self.setFlip = True
+        self.isMoving = True
+        amount = self.delta * Updateable.gameDeltaTime
+>>>>>>> master
         try:
             if self.x + amount.x < 0:
                 raise OffScreenLeftException            

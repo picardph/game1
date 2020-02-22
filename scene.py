@@ -19,12 +19,13 @@ global scene, scene_index, scene_list
 
 scene_index = 0
 scene = None
-scene_list = ['assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/beat']
-
+scene_list = ['assets/rooms/level3', 'assets/rooms/level4', 'assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/level5',
+              'assets/rooms/beat']
 
 def update_callback():
     global scene_index, scene, scene_list
     if scene.is_puzzle_finished():
+
         scene_index += 1
         e.drawables.empty()
         e.objects.clear()
@@ -71,7 +72,7 @@ class Scene(league.game_objects.Drawable):
         pygame.mixer.music.load('assets/Music/B0N3_J4NGL3.wav')
         pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play(-1)
-
+        self.scene_not_done = True
 
         global e
         e = engine
@@ -86,6 +87,7 @@ class Scene(league.game_objects.Drawable):
         self.__crates = []
         self.__enemies = []
         self.__pressure_plates = []
+        self.__pressure_plate_sounds = []
         self.__start_x = 0
         self.__start_y = 0
         self.__end_x = -20
@@ -162,6 +164,7 @@ class Scene(league.game_objects.Drawable):
                 elif color == TileType.pressure_plate.value:
                     self.__background[x][y] = TileType.pressure_plate
                     self.__pressure_plates.append((x * TILE_WIDTH, y * TILE_HEIGHT))
+                    self.__pressure_plate_sounds.append(False)
                 elif color == TileType.goblin.value:
                     g = Enemy(scene, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
                     g.world_size = world_size
@@ -218,15 +221,28 @@ class Scene(league.game_objects.Drawable):
                 crate_vec = pygame.Vector2((crate.x, crate.y))
                 dist = plate_vec.distance_to(crate_vec)
                 if dist < 16:
+                    if not self.__pressure_plate_sounds[idx]:
+                        # INSERT SOUND HERE!!!
+                        pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Scrape Effects/scrape-4.wav'))
+                        pass
+                    self.__pressure_plate_sounds[idx] = True
                     states[idx] = True
             idx += 1
         for s in states:
             if not s:
                 return False
+
+        if self.scene_not_done:
+            pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Victory/gmae.wav'))
+            self.scene_not_done = False
         # Check that the player is by the door.
         dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
+        if self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] != TileType.open_end:
+            self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] = TileType.open_end
+            self.image = self.render_background()
         if dist > 40:
             return False
+
         return True
 
     def get_width(self):

@@ -24,7 +24,7 @@ class Ranged_Shot(Collidable):
 
         if melee:
             self.maxRange = 50
-            self.delta *= 0.75
+            self.delta *= 0.25
         
         self.imageSelect()
 
