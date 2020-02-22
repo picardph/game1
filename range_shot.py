@@ -18,11 +18,13 @@ class Ranged_Shot(Collidable):
         self.x = x
         self.y = y
         self.image = pygame.image.load('./assets/right_shot.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (32,16))
         self.melee = melee
         self.maxRange = 0
         self.moved = 0
         self.direction = direction
         self.delta *= self.direction
+        self.offset = 16
 
         if melee:
             self.maxRange = 50
@@ -39,16 +41,10 @@ class Ranged_Shot(Collidable):
             self.imageSelect()
 
         self.rect = self.image.get_rect()
+        self.calcOffset()
+        
         self.rect.x = x
         self.rect.y = y
-
-        # Correct for the size of the projectile to make the bullet more centered from the player's position
-        if direction == Vector3(1, 0, 0) or direction == Vector3(-1, 0, 0):
-            self.rect.y = self.rect.y - (self.rect.height / 2)
-            self.y = self.rect.y
-        else:
-           self.rect.x = self.rect.x - (self.rect.width / 2)
-           self.x = self.rect.x
 
         self.world_size = (Settings.width, Settings.height)
         # What sprites am I not allowed to cross?
@@ -85,7 +81,6 @@ class Ranged_Shot(Collidable):
         except:
             self.scene.despawnObject(self)
             self.beenDeleted = True
-            print("Objection!")
             return
 
         for sprite in self.blocks:
@@ -99,8 +94,16 @@ class Ranged_Shot(Collidable):
                         self.scene.despawnObject(self)
         self.rect.x = self.x
         self.rect.y = self.y
-        print("I'm a projectile doing my thing. Don't mind me.")
-        print(str(amount))
+
+    def calcOffset(self):
+        # Method to set initial offset of projectile.
+        if self.direction.x != 0:
+            self.y -= self.rect.height / 2
+        if self.direction.y != 0:
+            self.x -= self.rect.width / 2
+        self.x += self.offset * self.direction.x
+        self.y += self.offset * self.direction.y
+
 
     def onCollision(self, collision, direction):
         try:
