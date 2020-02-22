@@ -6,6 +6,7 @@ import NPC_crate
 from overlay import Overlay
 import range_shot
 from player import Player
+from Enemy import Enemy
 
 
 TILE_WIDTH = league.settings.Settings.tile_size
@@ -56,6 +57,7 @@ class TileType(enum.Enum):
     end = pygame.Color(255, 0, 0)                       # Red
     open_end = pygame.Color(200, 0, 0)                  # Light Red
     pressure_plate = pygame.Color(163, 73, 164)         # Purple
+    goblin = pygame.Color(181, 230, 29)                 # Lime
 
 
 class Scene(league.game_objects.Drawable):
@@ -91,6 +93,9 @@ class Scene(league.game_objects.Drawable):
             TileType.open_end: pygame.image.load('assets/tiles/open_door.png').convert(),
             TileType.pressure_plate: pygame.image.load('assets/tiles/pressure_plate.png').convert()
         }
+
+        self.__floor = pygame.image.load('assets/tiles/floor_1.png').convert()
+
         self.engine = engine
         self.impassable = pygame.sprite.Group()
 
@@ -153,6 +158,15 @@ class Scene(league.game_objects.Drawable):
                 elif color == TileType.pressure_plate.value:
                     self.__background[x][y] = TileType.pressure_plate
                     self.__pressure_plates.append((x * TILE_WIDTH, y * TILE_HEIGHT))
+                elif color == TileType.goblin.value:
+                    g = Enemy(scene, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
+                    g.world_size = world_size
+                    g.rect = g.image.get_rect()
+                    g._layer = 1
+
+                    engine.objects.append(g)
+                    engine.drawables.add(g)
+
 
         # Pre-render that data to a surface to save performance.
         self.image = self.render_background()
@@ -177,6 +191,8 @@ class Scene(league.game_objects.Drawable):
         for x in range(0, self.__width):
             for y in range(0, self.__height):
                 tile = self.__background[x][y]
+                # Always draw the floor tile no matter what.
+                background.blit(self.__floor, (x * TILE_WIDTH, y * TILE_HEIGHT))
                 if tile is not TileType.empty:
                     image = self.__tile_images[tile]
                     background.blit(image, (x * TILE_WIDTH, y * TILE_HEIGHT))
