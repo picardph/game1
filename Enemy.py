@@ -53,6 +53,7 @@ class Enemy(Character, Collidable):
         self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect()
+
         # How big the world is, so we can check for boundaries
         self.world_size = (Settings.width, Settings.height)
         # What sprites am I not allowed to cross?
@@ -148,16 +149,6 @@ class Enemy(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
-        if self.isMoving == False:
-            self.image = pygame.image.load(self.idleImages[self.index]).convert_alpha()
-        elif self.isMoving == True:
-            self.image = pygame.image.load(self.runImages[self.index]).convert_alpha()
-            self.isMoving = False
-
-        self.image = pygame.transform.scale(self.image, (32, 32))
-        if self.setFlip == True:
-            self.image = pygame.transform.flip(self.image, True, False)
-
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x

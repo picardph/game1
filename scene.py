@@ -76,6 +76,9 @@ class Scene(league.game_objects.Drawable):
         global e
         e = engine
 
+        global scene
+        scene = self
+
         self.__engine = engine
         self.__width = data['width']
         self.__height = data['height']
@@ -163,6 +166,8 @@ class Scene(league.game_objects.Drawable):
                     g.world_size = world_size
                     g.rect = g.image.get_rect()
                     g._layer = 1
+                    g.x = x * TILE_WIDTH
+                    g.y = y * TILE_HEIGHT
 
                     engine.objects.append(g)
                     engine.drawables.add(g)
