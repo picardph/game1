@@ -36,7 +36,6 @@ class Player(Character, Collidable):
 
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
-
         self.attackDirection = Vector3(0, 0, 0)
 
 
@@ -95,8 +94,6 @@ class Player(Character, Collidable):
         self.scene = scene
 
     def move(self, direction):
-
-
         amount = self.delta * Updateable.gameDeltaTime * direction
         try:
             if self.x + amount.x < 0:
@@ -119,7 +116,7 @@ class Player(Character, Collidable):
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, melee =self.usingMelee)
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, self.usingMelee)
             if self.usingMelee:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
             else:
@@ -241,8 +238,6 @@ class Player(Character, Collidable):
                     self.direction.y = 0
                 if event.key == pygame.K_DOWN:
                     self.direction.y = 0
-                if event.key == pygame.K_SPACE:
-                    self.swap_weapons()
                 
                 # Attack release
                 if event.key == pygame.K_d:
