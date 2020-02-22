@@ -21,10 +21,10 @@ scene_index = 0
 scene = None
 scene_list = ['assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/beat']
 
-
 def update_callback():
     global scene_index, scene, scene_list
     if scene.is_puzzle_finished():
+
         scene_index += 1
         e.drawables.empty()
         e.objects.clear()
@@ -71,7 +71,7 @@ class Scene(league.game_objects.Drawable):
         pygame.mixer.music.load('assets/Music/B0N3_J4NGL3.wav')
         pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play(-1)
-
+        self.scene_not_done = True
 
         global e
         e = engine
@@ -213,15 +213,22 @@ class Scene(league.game_objects.Drawable):
                 crate_vec = pygame.Vector2((crate.x, crate.y))
                 dist = plate_vec.distance_to(crate_vec)
                 if dist < 16:
+                    pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Scrape Effects/scrape-4.wav'))
+
                     states[idx] = True
             idx += 1
         for s in states:
             if not s:
                 return False
+
+        if self.scene_not_done:
+            pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Victory/gmae.wav'))
+            self.scene_not_done = False
         # Check that the player is by the door.
         dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
         if dist > 40:
             return False
+
         return True
 
     def get_width(self):
