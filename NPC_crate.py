@@ -11,6 +11,7 @@ from league.game_objects import Updateable
 import pygame
 from collision import Collision, Collidable
 
+
 class Crate(Character, Collidable):
     def __init__(self, z, x, y, image='./assets/NPCs/16x16DungeonCrate.png'):
 
@@ -67,6 +68,7 @@ class Crate(Character, Collidable):
             else:
                 self.x += amount.x
                 self.y += amount.y
+                self.update()
         except:
             pass
 
@@ -80,7 +82,6 @@ class Crate(Character, Collidable):
                 self.collider.rect.y = sprite.y
                 if pygame.sprite.collide_rect(self, self.collider):
                     Collision(self, sprite)
-        
 
     def onCollision(self, collision, direction):
         if(abs(direction.x) > abs(direction.y)):

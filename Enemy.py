@@ -2,6 +2,7 @@ from league import *
 from league.game_objects import Updateable
 from collision import Collision, Collidable
 import pygame
+from pygame import Vector3
 from range_shot import Ranged_Shot
 
 
@@ -73,6 +74,11 @@ class Enemy(Character, Collidable):
 
         self.scene = scene
 
+        # The direction the player is facing. Should be a unit vector.
+        self.direction = Vector3(0, 0, 0)
+
+        self.attackDirection = Vector3(0, 0, 0)
+
     def move_left(self):
         self.setFlip = True
         self.isMoving = True
@@ -132,18 +138,15 @@ class Enemy(Character, Collidable):
         except:
             pass
 
-    def shoot_left(self):
-        pass
-
-    def shoot_right(self):
-        self.scene.addRanged(self.x, self.y)
-        pass
-
-    def shoot_up(self):
-        pass
-
-    def shoot_down(self):
-        pass
+    def shoot(self, direction:Vector3):
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > 250:
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, melee =self.usingMelee)
+            if self.usingMelee:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
+            else:
+                pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[2]))
+            self.last_shot = now
 
     def update(self):
         self.rect.x = self.x

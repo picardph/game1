@@ -19,7 +19,8 @@ global scene, scene_index, scene_list
 
 scene_index = 0
 scene = None
-scene_list = ['assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/beat']
+scene_list = ['assets/rooms/level3', 'assets/rooms/level4', 'assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/level5',
+              'assets/rooms/beat']
 
 def update_callback():
     global scene_index, scene, scene_list
