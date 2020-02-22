@@ -53,6 +53,8 @@ class Crate(Character, Collidable):
 
     def move(self, direction):
         amount = self.delta * Updateable.gameDeltaTime * direction
+        #pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Scrape Effects/scrape-2.wav'))
+
         try:
             if self.x + amount.x < 0:
                 raise OffScreenLeftException            
