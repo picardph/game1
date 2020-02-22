@@ -85,6 +85,7 @@ class Scene(league.game_objects.Drawable):
         self.__background = [[TileType.empty for y in range(0, data['height'])] for x in range(0, data['width'])]
         self.__crates = []
         self.__pressure_plates = []
+        self.__pressure_plate_sounds = []
         self.__start_x = 0
         self.__start_y = 0
         self.__end_x = -20
@@ -161,6 +162,7 @@ class Scene(league.game_objects.Drawable):
                 elif color == TileType.pressure_plate.value:
                     self.__background[x][y] = TileType.pressure_plate
                     self.__pressure_plates.append((x * TILE_WIDTH, y * TILE_HEIGHT))
+                    self.__pressure_plate_sounds.append(False)
                 elif color == TileType.goblin.value:
                     g = Enemy(scene, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
                     g.world_size = world_size
@@ -213,6 +215,10 @@ class Scene(league.game_objects.Drawable):
                 crate_vec = pygame.Vector2((crate.x, crate.y))
                 dist = plate_vec.distance_to(crate_vec)
                 if dist < 16:
+                    if not self.__pressure_plate_sounds[idx]:
+                        # INSERT SOUND HERE!!!
+                        pass
+                    self.__pressure_plate_sounds[idx] = True
                     states[idx] = True
             idx += 1
         for s in states:
