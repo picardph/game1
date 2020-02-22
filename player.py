@@ -108,7 +108,7 @@ class Player(Character, Collidable):
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.x - self.rect.width, self.rect.centery, direction, melee =self.usingMelee)
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, melee =self.usingMelee)
             self.last_shot = now
 
     def update(self):
