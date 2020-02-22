@@ -49,7 +49,6 @@ class Ranged_Shot(Collidable):
 
     def update(self):
         amount = self.delta * Updateable.gameDeltaTime
-        print(str(amount))
         if self.melee:
             self.moved += amount.magnitude()
             if self.moved >= self.maxRange:
