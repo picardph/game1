@@ -16,7 +16,7 @@ class Enemy(Character, Collidable):
         
         super().__init__(args)
         # This unit's health
-        self.health = 100
+        self.health = 30
 
         # This unit's max health
         self.maxHealth = 100
@@ -163,7 +163,7 @@ class Enemy(Character, Collidable):
             direction.x = 0
         self.move(direction.normalize())
 
-        if collision.getOther(self):
+        if type(collision.getOther(self)) == Ranged_Shot:
             self.ouch()
 
 
@@ -171,12 +171,12 @@ class Enemy(Character, Collidable):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
 
         now = pygame.time.get_ticks()
-        if now - self.last_hit > 1000:
+        if now - self.last_hit > 250:
             self.health = self.health - 10
             self.last_hit = now
             self.scene.overlay.healthChange()
             if self.health <= 0:
-                self.onDeath
+                self.onDeath()
                 
     def heal(self, amount):
         if amount <= 0:
@@ -187,8 +187,7 @@ class Enemy(Character, Collidable):
         self.scene.overlay.healthChange()
 
     def onDeath(self):
-        #TODO handle enemy death.
-        pass
+        self.scene.despawnObject(self)
 
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee
