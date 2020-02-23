@@ -22,6 +22,10 @@ class Enemy(Character, Collidable):
         # This unit's max health
         self.maxHealth = 100
 
+        # Damage values
+        self.meleeDmg = 50
+        self.rangedDmg = 20
+        
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
