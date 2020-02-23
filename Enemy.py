@@ -25,7 +25,7 @@ class Enemy(Character, Collidable):
         # Damage values
         self.meleeDmg = 50
         self.rangedDmg = 20
-        
+
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
@@ -216,7 +216,6 @@ class Enemy(Character, Collidable):
         distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
         if  distance > self.pfTolerance:
             direction = (self.destinations[self.destIndex] - Vector3(self.x, self.y, 0)).normalize()
-            print("Direction: " + str(direction))
             self.direction = direction
         else:
             self.direction *= 0
