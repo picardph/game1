@@ -124,7 +124,9 @@ class Player(Character, Collidable):
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, melee =self.usingMelee)
+            
+            damage = self.meleeDmg if self.usingMelee else self.rangedDmg
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, damage, melee =self.usingMelee)
             if self.usingMelee:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
             else:
