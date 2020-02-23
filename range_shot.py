@@ -6,7 +6,7 @@ from pygame import Vector3
 from NPC_crate import Crate
 
 class Ranged_Shot(Collidable):
-    def __init__(self, z, x, y, scene, direction:Vector3, melee = False):
+    def __init__(self, z, x, y, scene, direction:Vector3, source, damage = 10, melee = False):
 
         super().__init__(z, x, y)
 
@@ -16,15 +16,17 @@ class Ranged_Shot(Collidable):
         self.y = y
         self.image = None
         self.melee = melee
+        self.damage = damage
         self.maxRange = 0
         self.moved = 0
         self.direction = direction
-        self.delta = self.direction * 750
+        self.delta = self.direction * 500
         self.offset = 16
+        self.source = source
 
         if melee:
             self.maxRange = 50
-            self.delta *= 0.25
+            self.delta *= 0.50
         
         self.imageSelect()
 
@@ -95,7 +97,8 @@ class Ranged_Shot(Collidable):
 
     def onCollision(self, collision, direction):
         try:
-          self.scene.despawnObject(self)
+            if self.source is not collision.getOther(self):
+                self.scene.despawnObject(self)
         except:
             pass
 

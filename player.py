@@ -6,6 +6,7 @@ from collision import Collision, Collidable
 from pygame import Vector3
 import pygame
 from range_shot import Ranged_Shot
+from Enemy import Enemy
 
 
 class Player(Character, Collidable):
@@ -25,6 +26,10 @@ class Player(Character, Collidable):
         # This unit's max health
         self.maxHealth = 100
 
+        # Damage values
+        self.meleeDmg = 50
+        self.rangedDmg = 20
+
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
@@ -36,6 +41,7 @@ class Player(Character, Collidable):
 
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
+
         self.attackDirection = Vector3(0, 0, 0)
 
 
@@ -86,14 +92,11 @@ class Player(Character, Collidable):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
-        
-        # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
 
     def move(self, direction):
+
         amount = self.delta * Updateable.gameDeltaTime * direction
         try:
             if self.x + amount.x < 0:
@@ -116,7 +119,9 @@ class Player(Character, Collidable):
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, self.usingMelee)
+
+            damage = self.meleeDmg if self.usingMelee else self.rangedDmg
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, self, damage, self.usingMelee)
             if self.usingMelee:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
             else:
@@ -161,26 +166,30 @@ class Player(Character, Collidable):
 
     def onCollision(self, collision, direction):
 
+        other = collision.getOther(self)
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
             direction.x = 0
         self.move(direction.normalize())
 
-        #For testing health.
-        #TODO Check for object type
+        if type(other) is Enemy:
+            self.ouch(other.meleeDmg)
+        
+        if type(other) is Ranged_Shot:
+            self.ouch(other.damage)
 
-
-    def ouch(self):
+            
+    def ouch(self, damage=10):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
 
         now = pygame.time.get_ticks()
         if now - self.last_hit > 1000:
-            self.health = self.health - 10
+            self.health -= damage
             self.last_hit = now
             self.scene.overlay.healthChange()
             if self.health <= 0:
-                self.onDeath
+                self.onDeath()
                 
     def heal(self, amount):
         if amount <= 0:
@@ -191,8 +200,8 @@ class Player(Character, Collidable):
         self.scene.overlay.healthChange()
 
     def onDeath(self):
-        #TODO handle player death.
-        pass
+        print("Player died!")
+        #TODO Reset room.
 
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee

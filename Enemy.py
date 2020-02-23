@@ -22,6 +22,10 @@ class Enemy(Character, Collidable):
         # This unit's max health
         self.maxHealth = 100
 
+        # Damage values
+        self.meleeDmg = 20
+        self.rangedDmg = 10
+
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
 
@@ -29,7 +33,7 @@ class Enemy(Character, Collidable):
         self.last_shot = pygame.time.get_ticks()
 
         # A unit-less value.  Bigger is faster.
-        self.delta = 200
+        self.delta = 150
 
         # The direction the player is facing. Should be a unit vector.
         self.direction = Vector3(0, 0, 0)
@@ -84,12 +88,17 @@ class Enemy(Character, Collidable):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
-        
-        # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
+
+        # Used to tell where this enemy should move.
+        self.destinations = []
+
+        # What destination is currently being targeted.
+        self.destIndex = 0
+
+        # How accurate the pathfinding has to be. Lower is more accurate.
+        self.pfTolerance = 5
 
     def move(self, direction):
         amount = self.delta * Updateable.gameDeltaTime * direction
@@ -113,8 +122,9 @@ class Enemy(Character, Collidable):
 
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
-        if now - self.last_shot > 250:
-            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, melee =self.usingMelee)
+        if now - self.last_shot > 400:
+            damage = self.meleeDmg if self.usingMelee else self.rangedDmg
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, self, damage, self.usingMelee)
             if self.usingMelee:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
             else:
@@ -125,6 +135,9 @@ class Enemy(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
+
+        self.simplePathFinding()
+        self.attackPlayer()
 
         #If player's direction is not 0, 0, 0, player is moving.
         if self.direction != Vector3(0,0,0):
@@ -157,25 +170,24 @@ class Enemy(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
-
+        other = collision.getOther(self)
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
             direction.x = 0
         self.move(direction.normalize())
 
-        if type(collision.getOther(self)) == Ranged_Shot:
-            self.ouch()
+        if type(other) is Ranged_Shot:
+            if other.source is not self:
+                self.ouch(other.damage)
 
-
-    def ouch(self):
+    def ouch(self, damage=10):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
 
         now = pygame.time.get_ticks()
-        if now - self.last_hit > 250:
-            self.health = self.health - 10
+        if now - self.last_hit > 1000:
+            self.health -= damage
             self.last_hit = now
-            self.scene.overlay.healthChange()
             if self.health <= 0:
                 self.onDeath()
                 
@@ -192,3 +204,50 @@ class Enemy(Character, Collidable):
 
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee
+
+    def simplePathFinding(self):
+        """
+        This path finding method simply directs the enemy towards each location
+        in the destinations list. It does not account for obstacles. When it 
+        reaches the end of the list, it returns to the start.
+        """
+        distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
+        if  distance > self.pfTolerance:
+            direction = (self.destinations[self.destIndex] - Vector3(self.x, self.y, 0)).normalize()
+            self.direction = direction
+        else:
+            self.direction *= 0
+            if self.destIndex < len(self.destinations) -1:
+                self.destIndex += 1
+            else:
+                self.destIndex = 0
+
+    def attackPlayer(self):
+        playerPos = Vector3(self.scene.player.rect.centerx, self.scene.player.rect.centery, 0)
+        distance = Vector3(self.x, self.y, 0).distance_to(playerPos)
+        if distance < 300:
+            if distance < 60:
+                self.usingMelee = True
+            else:
+                self.usingMelee = False
+            self.shoot(self.getDirection(playerPos))
+            
+    def getDirection(self, target:Vector3):
+        """
+        Method that returns a vector to the nearest cardinal direction to the target.
+        """
+        direction = (target - Vector3(self.rect.centerx, self.rect.centery, 0)).normalize()
+        if direction.x > 0.25:
+            direction.x = 1
+        elif direction.x < -0.25:
+            direction.x = -1
+        else:
+            direction.x = 0
+
+        if direction.y > 0.25:
+            direction.y = 1
+        elif direction.y < -0.25:
+            direction.y = -1
+        else:
+            direction.y = 0
+        return direction
