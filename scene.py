@@ -114,7 +114,7 @@ class Scene(league.game_objects.Drawable):
         player.rect = player.image.get_rect()
         player._layer = 1
 
-        self.__player = player
+        self.player = player
 
         engine.objects.append(player)
         engine.drawables.add(player)
@@ -247,7 +247,7 @@ class Scene(league.game_objects.Drawable):
             pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Victory/gmae.wav'))
             self.scene_not_done = False
         # Check that the player is by the door.
-        dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.__player.x, self.__player.y)))
+        dist = pygame.Vector2((self.__end_x, self.__end_y)).distance_to(pygame.Vector2((self.player.x, self.player.y)))
         if self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] != TileType.open_end:
             self.__background[self.__end_x // TILE_WIDTH][self.__end_y // TILE_HEIGHT] = TileType.open_end
             self.image = self.render_background()
@@ -268,8 +268,8 @@ class Scene(league.game_objects.Drawable):
     def get_starting_y(self):
         return self.__start_y
 
-    def addRanged(self, x, y, direction, damage = 10,melee = False):
-        bullet = range_shot.Ranged_Shot(0, x, y, self, direction, melee)
+    def addRanged(self, x, y, direction, source, damage = 10, melee=False):
+        bullet = range_shot.Ranged_Shot(0, x, y, self, direction, source, damage, melee)
         bullet._layer = 1
         bullet.blocks.add(self.impassable, self.__crates)
         self.engine.objects.append(bullet)
