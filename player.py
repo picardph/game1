@@ -177,25 +177,22 @@ class Player(Character, Collidable):
         self.move(direction.normalize())
 
         if type(other) is Enemy:
-            self.ouch(other.meleeDamage)
+            self.ouch(other.meleeDmg)
         
         if type(other) is Ranged_Shot:
             self.ouch(other.damage)
 
             
-
-
-
     def ouch(self, damage=10):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
 
         now = pygame.time.get_ticks()
         if now - self.last_hit > 1000:
-            self.health = self.health - damage
+            self.health -= damage
             self.last_hit = now
             self.scene.overlay.healthChange()
             if self.health <= 0:
-                self.onDeath
+                self.onDeath()
                 
     def heal(self, amount):
         if amount <= 0:
@@ -206,8 +203,8 @@ class Player(Character, Collidable):
         self.scene.overlay.healthChange()
 
     def onDeath(self):
-        #TODO handle player death.
-        pass
+        print("Player died!")
+        #TODO Reset room.
 
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee
