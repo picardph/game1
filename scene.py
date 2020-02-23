@@ -7,6 +7,7 @@ from overlay import Overlay
 import range_shot
 from player import Player
 from Enemy import Enemy
+from pygame import Vector3
 
 
 TILE_WIDTH = league.settings.Settings.tile_size
@@ -173,6 +174,12 @@ class Scene(league.game_objects.Drawable):
                     g._layer = 1
                     g.x = x * TILE_WIDTH
                     g.y = y * TILE_HEIGHT
+
+                    # Destinations added for testing. Would likely be better to handle this somewhere else or make pre built patterns.
+                    g.destinations.append(Vector3(g.x, g.y, 0))
+                    g.destinations.append(Vector3(g.x + 256, g.y, 0))
+                    g.destinations.append(Vector3(g.x + 256, g.y - 128, 0))
+                    g.destinations.append(Vector3(g.x - 128, g.y, 0))
 
                     engine.objects.append(g)
                     engine.drawables.add(g)
