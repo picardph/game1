@@ -51,7 +51,7 @@ class Enemy(Character, Collidable):
         self.idleImages = []
 
         self.soundEffects = []
-        self.soundEffects.append('assets/Music/Movement/footsteps/step_metal (3).ogg')
+        self.soundEffects.append('assets/Music/Movement/footsteps/step_cloth2.ogg')
         self.soundEffects.append('assets/Combat/Socapex - hurt.wav')
         self.soundEffects.append('assets/Combat/105016__julien-matthey__jm-fx-fireball-01.wav')
         self.soundEffects.append('assets/Combat/heavy_sword.wav')
@@ -115,7 +115,7 @@ class Enemy(Character, Collidable):
                 self.x += amount.x
                 self.y += amount.y
 
-            pygame.mixer.Channel(0).play(pygame.mixer.Sound(self.soundEffects[0]))
+            pygame.mixer.Channel(4).play(pygame.mixer.Sound(self.soundEffects[0]))
 
         except:
             pass
