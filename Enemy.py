@@ -91,6 +91,15 @@ class Enemy(Character, Collidable):
 
         self.scene = scene
 
+        # Used to tell where this enemy should move.
+        self.destinations = []
+
+        # What destination is currently being targeted.
+        self.destIndex = 0
+
+        # How accurate the pathfinding has to be. Lower is more accurate.
+        self.pfTolerance = 5
+
     def move(self, direction):
         amount = self.delta * Updateable.gameDeltaTime * direction
         try:
@@ -125,6 +134,8 @@ class Enemy(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
+
+        self.simplePathFinding()
 
         #If player's direction is not 0, 0, 0, player is moving.
         if self.direction != Vector3(0,0,0):
@@ -167,7 +178,6 @@ class Enemy(Character, Collidable):
         if type(collision.getOther(self)) == Ranged_Shot:
             self.ouch()
 
-
     def ouch(self):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
 
@@ -192,3 +202,22 @@ class Enemy(Character, Collidable):
 
     def swap_weapons(self):
         self.usingMelee = not self.usingMelee
+
+    def simplePathFinding(self):
+        """
+        This path finding method simply directs the enemy towards each location
+        in the destinations list. It does not account for obstacles. When it 
+        reaches the end of the list, it returns to the start.
+        """
+        distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
+        if  distance > self.pfTolerance:
+            direction = (self.destinations[self.destIndex] - Vector3(self.x, self.y, 0)).normalize()
+            print("Direction: " + str(direction))
+            self.direction = direction
+        else:
+            self.direction *= 0
+            if self.destIndex < len(self.destinations) -1:
+                self.destIndex += 1
+            else:
+                self.destIndex = 0
+
