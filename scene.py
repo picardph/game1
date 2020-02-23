@@ -268,7 +268,7 @@ class Scene(league.game_objects.Drawable):
     def get_starting_y(self):
         return self.__start_y
 
-    def addRanged(self, x, y, direction, melee = False):
+    def addRanged(self, x, y, direction, damage = 10,melee = False):
         bullet = range_shot.Ranged_Shot(0, x, y, self, direction, melee)
         bullet._layer = 1
         bullet.blocks.add(self.impassable, self.__crates)
@@ -284,6 +284,9 @@ class Scene(league.game_objects.Drawable):
                 self.numEnemies -= 1
             if type(toDelete) is NPC_crate:
                 self.__crates.remove(toDelete)
+
+            for o in e.objects:
+                o.blocks.remove(toDelete)
             try:
                 self.impassable.remove(toDelete)
             except:
