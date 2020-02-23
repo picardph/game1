@@ -101,7 +101,6 @@ class Player(Character, Collidable):
 
     def move(self, direction):
 
-
         amount = self.delta * Updateable.gameDeltaTime * direction
         try:
             if self.x + amount.x < 0:
@@ -124,7 +123,7 @@ class Player(Character, Collidable):
     def shoot(self, direction:Vector3):
         now = pygame.time.get_ticks()
         if now - self.last_shot > 250:
-            
+
             damage = self.meleeDmg if self.usingMelee else self.rangedDmg
             self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, damage, melee =self.usingMelee)
             if self.usingMelee:
@@ -252,8 +251,6 @@ class Player(Character, Collidable):
                     self.direction.y = 0
                 if event.key == pygame.K_DOWN:
                     self.direction.y = 0
-                if event.key == pygame.K_SPACE:
-                    self.swap_weapons()
                 
                 # Attack release
                 if event.key == pygame.K_d:
