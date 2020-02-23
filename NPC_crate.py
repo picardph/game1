@@ -13,69 +13,13 @@ from collision import Collision, Collidable
 
 
 class Crate(Character, Collidable):
-    def __init__(self, z, x, y, image='./assets/NPCs/16x16DungeonCrate.png'):
-
-        super().__init__(z, x, y)
-
-        # This unit's health
-        #self.health = 10000
-        # Last time I was hit
-        self.last_hit = pygame.time.get_ticks()
-
-        #movement speed
-        self.delta = 100
-
-        #crate position
-        self.x = x
-        self.y = y
-
-        #crate image
-        self.image = pygame.image.load(image).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (32, 32))
-        self.rect = self.image.get_rect()
-
-        # How big the world is, so we can check for boundaries
-        self.world_size = (Settings.width, Settings.height)
-        # What sprites am I not allowed to cross?
-        self.blocks = pygame.sprite.Group()
-        # Which collision detection function?
-        self.collide_function = pygame.sprite.collide_circle
-        self.collisions = []
-
-        # For collision detection, we need to compare our sprite
-        # with collideable sprites.  However, we have to remap
-        # the collideable sprites coordinates since they change.
-        # For performance reasons I created this sprite so we
-        # don't have to create more memory each iteration of
-        # collision detection.
-        self.collider = Drawable()
-        self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
-        self.collider.rect = self.collider.image.get_rect()
-
-    def move(self, direction):
-        amount = self.delta * Updateable.gameDeltaTime * direction
-        #pygame.mixer.Channel(3).play(pygame.mixer.Sound('assets/Music/Scrape Effects/scrape-2.wav'))
-
-        try:
-            if self.x + amount.x < 0:
-                raise OffScreenLeftException            
-            elif self.x + amount.x > self.world_size[0] - Settings.tile_size:
-                raise OffScreenRightException
-            elif self.y + amount.y < 0:
-                raise OffScreenTopException
-            elif self.y + amount.y > self.world_size[1] - Settings.tile_size:
-                raise OffScreenBottomException
-            else:
-                self.x += amount.x
-                self.y += amount.y
-                self.update()
-        except:
-            pass
+    def __init__(self, *args):
+        super().__init__(args)
+        self.idleImages.append('./assets/NPCs/16x16DungeonCrate.png')
+        self.maxHealth = 1000000
+        self.health = 1000000
 
     def update(self):
-        self.rect.x = self.x
-        self.rect.y = self.y
-        #self.collisions = []
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x
