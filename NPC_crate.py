@@ -68,7 +68,7 @@ class Crate(Character, Collidable):
             else:
                 self.x += amount.x
                 self.y += amount.y
-                self.update()
+
         except:
             pass
 

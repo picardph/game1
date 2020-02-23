@@ -201,6 +201,7 @@ class Player(Character, Collidable):
 
     def onDeath(self):
         print("Player died!")
+        self.scene.reset()
         #TODO Reset room.
 
     def swap_weapons(self):

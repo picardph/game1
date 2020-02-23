@@ -293,3 +293,6 @@ class Scene(league.game_objects.Drawable):
                 pass
         except:
             pass
+
+    def reset(self):
+        reset_room()
