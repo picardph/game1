@@ -92,10 +92,6 @@ class Player(Character, Collidable):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
-        
-        # Overlay
-        self.font = pygame.font.Font('freesansbold.ttf', 32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0, 0, 0))
 
         self.scene = scene
 
@@ -125,7 +121,7 @@ class Player(Character, Collidable):
         if now - self.last_shot > 250:
 
             damage = self.meleeDmg if self.usingMelee else self.rangedDmg
-            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, damage, melee =self.usingMelee)
+            self.scene.addRanged(self.rect.centerx, self.rect.centery, direction, self, damage, self.usingMelee)
             if self.usingMelee:
                 pygame.mixer.Channel(2).play(pygame.mixer.Sound(self.soundEffects[3]))
             else:
