@@ -165,8 +165,11 @@ class Player(Character, Collidable):
                     Collision(self, sprite)
 
     def onCollision(self, collision, direction):
-
         other = collision.getOther(self)
+        if type(other) is Ranged_Shot:
+            if type(other.source) is Enemy:
+                self.ouch(other.damage)
+            return
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
@@ -176,8 +179,7 @@ class Player(Character, Collidable):
         if type(other) is Enemy:
             self.ouch(other.meleeDmg)
         
-        if type(other) is Ranged_Shot:
-            self.ouch(other.damage)
+
 
             
     def ouch(self, damage=10):

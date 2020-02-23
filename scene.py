@@ -271,7 +271,7 @@ class Scene(league.game_objects.Drawable):
     def addRanged(self, x, y, direction, source, damage = 10, melee=False):
         bullet = range_shot.Ranged_Shot(0, x, y, self, direction, source, damage, melee)
         bullet._layer = 1
-        bullet.blocks.add(self.impassable, self.__crates)
+        bullet.blocks.add(self.impassable, self.__crates, self.player)
         self.engine.objects.append(bullet)
         self.engine.drawables.add(bullet)
 
