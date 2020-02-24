@@ -178,11 +178,17 @@ class Enemy(Character, Collidable):
             direction.y = 0
         else:
             direction.x = 0
-        self.move(direction.normalize())
 
         if type(other) is Ranged_Shot:
             if other.source is not self:
                 self.ouch(other.damage)
+        else:
+            self.move(direction.normalize())
+            if self.destIndex < len(self.destinations) -1:
+                    self.destIndex += 1
+            else:
+                self.destIndex = 0
+
 
     def ouch(self, damage=10):
         pygame.mixer.Channel(1).play(pygame.mixer.Sound(self.soundEffects[1]))
