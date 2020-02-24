@@ -28,6 +28,9 @@ class Overlay(league.DUGameObject):
         self.static = True
 
     def update(self):
+        pass
+
+    def slowUpdate(self):
         self.image.fill((0,100,200, 0))
         pygame.draw.rect(self.image, self.bgColor, self.bgRect)
         pygame.draw.rect(self.image, self.hpColor, self.hpRect)
