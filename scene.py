@@ -144,7 +144,7 @@ class Scene(league.game_objects.Drawable):
                     spr.rect = pygame.Rect(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT)
                     self.impassable.add(spr)
                 elif color == TileType.crate.value:
-                    crate = NPC_crate.Crate(0, x * TILE_WIDTH, y * TILE_HEIGHT)
+                    crate = NPC_crate.Crate(self, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
                     crate.world_size = world_size
                     crate.rect = crate.image.get_rect()
                     crate._layer = 1
@@ -168,7 +168,7 @@ class Scene(league.game_objects.Drawable):
                     self.__pressure_plates.append((x * TILE_WIDTH, y * TILE_HEIGHT))
                     self.__pressure_plate_sounds.append(False)
                 elif color == TileType.goblin.value:
-                    g = Enemy(scene, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
+                    g = Enemy(self, 0, x * TILE_WIDTH, y * TILE_HEIGHT)
                     g.world_size = world_size
                     g.rect = g.image.get_rect()
                     g._layer = 1
