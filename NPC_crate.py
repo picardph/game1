@@ -13,13 +13,14 @@ from collision import Collision, Collidable
 
 
 class Crate(Character, Collidable):
-    def __init__(self, *args):
-        super().__init__(args)
+    def __init__(self, scene, *args):
+        super().__init__(scene, args)
         self.idleImages.append('./assets/NPCs/16x16DungeonCrate.png')
         self.maxHealth = 1000000
         self.health = 1000000
 
     def update(self):
+        super().update()
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x

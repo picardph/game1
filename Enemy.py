@@ -13,9 +13,9 @@ class Enemy(Character, Collidable):
     """
     """
 
-    def __init__(self, *args):
+    def __init__(self, scene, *args):
         
-        super().__init__(args)
+        super().__init__(scene, args)
 
         
         self.soundEffects.append('assets/Music/Movement/footsteps/step_cloth2.ogg')
@@ -47,7 +47,7 @@ class Enemy(Character, Collidable):
         self.pfTolerance = 5
 
     def update(self):
-        super.update()
+        super().update()
 
         self.simplePathFinding()
         self.attackPlayer()

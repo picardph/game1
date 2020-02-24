@@ -148,12 +148,13 @@ class Scene(league.game_objects.Drawable):
                     crate.world_size = world_size
                     crate.rect = crate.image.get_rect()
                     crate._layer = 1
+                    crate.x = x * TILE_WIDTH
+                    crate.y = y * TILE_HEIGHT
                     self.__crates.append(crate)
 
                     engine.objects.append(crate)
                     engine.drawables.add(crate)
 
-                    # testCrate.blocks.add(scene.impassable)
                 elif color == TileType.start.value:
                     self.__start_x = x * TILE_WIDTH
                     self.__start_y = y * TILE_HEIGHT

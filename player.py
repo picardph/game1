@@ -17,9 +17,9 @@ class Player(Character, Collidable):
     written as a demo but should direction.
     """
 
-    def __init__(self, *args):
+    def __init__(self, scene, *args):
         
-        super().__init__(args)
+        super().__init__(scene, args)
         self.soundEffects.append('assets/Music/Movement/footsteps/step_metal (3).ogg')
         self.soundEffects.append('assets/Combat/Socapex - hurt.wav')
         self.soundEffects.append('assets/Combat/105016__julien-matthey__jm-fx-fireball-01.wav')

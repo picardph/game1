@@ -67,12 +67,11 @@ class Character(DUGameObject):
         self.isMoving = False
         self.isAttacking = False
         self.usingMelee = False
-        self.idleImages = [image]
+        self.idleImages = []
         self.runImages = []
         self.soundEffects = []
 
         self.index = 0
-        self.image = self.idleImages[self.index]
         self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect()
 
