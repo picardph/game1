@@ -40,8 +40,11 @@ class Player(Character, Collidable):
         self.runImages.append('assets/v1.1 dungeon crawler 16x16 pixel pack/heroes/knight/knight_run_anim_f5.png')
 
     def onCollision(self, collision, direction):
-
         other = collision.getOther(self)
+        if type(other) is Ranged_Shot:
+            if type(other.source) is Enemy:
+                self.ouch(other.damage)
+            return
         if(abs(direction.x) > abs(direction.y)):
             direction.y = 0
         else:
@@ -65,6 +68,7 @@ class Player(Character, Collidable):
 
     def onDeath(self):
         print("Player died!")
+        self.scene.reset()
         #TODO Reset room.
 
     def handleInput(self):

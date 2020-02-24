@@ -21,7 +21,7 @@ global scene, scene_index, scene_list
 scene_index = 0
 scene = None
 scene_list = ['assets/rooms/level3', 'assets/rooms/level4', 'assets/rooms/level1', 'assets/rooms/level2', 'assets/rooms/level5',
-              'assets/rooms/beat']
+              'assets/rooms/level6', 'assets/rooms/beat']
 
 def update_callback():
     global scene_index, scene, scene_list
@@ -271,7 +271,7 @@ class Scene(league.game_objects.Drawable):
     def addRanged(self, x, y, direction, source, damage = 10, melee=False):
         bullet = range_shot.Ranged_Shot(0, x, y, self, direction, source, damage, melee)
         bullet._layer = 1
-        bullet.blocks.add(self.impassable, self.__crates)
+        bullet.blocks.add(self.impassable, self.__crates, self.player)
         self.engine.objects.append(bullet)
         self.engine.drawables.add(bullet)
 
@@ -293,3 +293,6 @@ class Scene(league.game_objects.Drawable):
                 pass
         except:
             pass
+
+    def reset(self):
+        reset_room()

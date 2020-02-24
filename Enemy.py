@@ -17,7 +17,8 @@ class Enemy(Character, Collidable):
         
         super().__init__(args)
 
-        self.soundEffects.append('assets/Music/Movement/footsteps/step_metal (3).ogg')
+        
+        self.soundEffects.append('assets/Music/Movement/footsteps/step_cloth2.ogg')
         self.soundEffects.append('assets/Combat/Socapex - hurt.wav')
         self.soundEffects.append('assets/Combat/105016__julien-matthey__jm-fx-fireball-01.wav')
         self.soundEffects.append('assets/Combat/heavy_sword.wav')
