@@ -210,17 +210,27 @@ class Enemy(Character, Collidable):
         This path finding method simply directs the enemy towards each location
         in the destinations list. It does not account for obstacles. When it 
         reaches the end of the list, it returns to the start.
+
+        If the player is within 180 units of the enemy, the enemy will now "chase"
+        the player.
         """
-        distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
-        if  distance > self.pfTolerance:
-            direction = (self.destinations[self.destIndex] - Vector3(self.x, self.y, 0)).normalize()
-            self.direction = direction
+
+        playerPos = Vector3(self.scene.player.rect.centerx, self.scene.player.rect.centery, 0)
+        distance = Vector3(self.x, self.y, 0).distance_to(playerPos)
+        if distance < 180:
+            self.move(self.getDirection(playerPos))
         else:
-            self.direction *= 0
-            if self.destIndex < len(self.destinations) -1:
-                self.destIndex += 1
+            distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
+            if  distance > self.pfTolerance:
+                direction = (self.destinations[self.destIndex] - Vector3(self.x, self.y, 0)).normalize()
+                self.direction = direction
             else:
-                self.destIndex = 0
+                self.direction *= 0
+                if self.destIndex < len(self.destinations) -1:
+                    self.destIndex += 1
+                else:
+                    self.destIndex = 0
+
 
     def attackPlayer(self):
         playerPos = Vector3(self.scene.player.rect.centerx, self.scene.player.rect.centery, 0)
