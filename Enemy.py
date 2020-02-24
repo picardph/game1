@@ -159,16 +159,18 @@ class Enemy(Character, Collidable):
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
 
+        
+
+    def slowUpdate(self):
+        self.simplePathFinding()
+        self.attackPlayer()
+
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x
                 self.collider.rect.y = sprite.y
                 if pygame.sprite.collide_rect(self, self.collider):
                     Collision(self, sprite)
-
-    def slowUpdate(self):
-        self.simplePathFinding()
-        self.attackPlayer()
 
     def onCollision(self, collision, direction):
         other = collision.getOther(self)
@@ -219,7 +221,7 @@ class Enemy(Character, Collidable):
         playerPos = Vector3(self.scene.player.rect.centerx, self.scene.player.rect.centery, 0)
         distance = Vector3(self.x, self.y, 0).distance_to(playerPos)
         if distance < 180:
-            self.move(self.getDirection(playerPos))
+            self.direction = self.getDirection(playerPos).normalize()
         else:
             distance = Vector3(self.x, self.y, 0).distance_to(self.destinations[self.destIndex])
             if  distance > self.pfTolerance:
