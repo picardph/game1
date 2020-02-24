@@ -136,9 +136,6 @@ class Enemy(Character, Collidable):
         self.rect.y = self.y
         self.index = (self.index + 1) % len(self.idleImages)
 
-        self.simplePathFinding()
-        self.attackPlayer()
-
         #If player's direction is not 0, 0, 0, player is moving.
         if self.direction != Vector3(0,0,0):
             self.isMoving = True
@@ -168,6 +165,10 @@ class Enemy(Character, Collidable):
                 self.collider.rect.y = sprite.y
                 if pygame.sprite.collide_rect(self, self.collider):
                     Collision(self, sprite)
+
+    def slowUpdate(self):
+        self.simplePathFinding()
+        self.attackPlayer()
 
     def onCollision(self, collision, direction):
         other = collision.getOther(self)

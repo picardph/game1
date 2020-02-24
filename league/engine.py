@@ -45,6 +45,9 @@ class Engine:
         self.collisions = {}
         self.gameEvents = []
 
+        # Tick when the last slowUpdate was called.
+        self.lastSUpdate = 0
+
     def init_pygame(self):
         """This function sets up the state of the pygame system,
         including passing any specific settings to it."""
@@ -66,6 +69,8 @@ class Engine:
         pygame.key.set_repeat(Settings.key_repeat)
         # Create statistics font
         self.statistics_font = pygame.font.Font(None,30)
+
+        
 
     def run(self, update_callback):
         """The main game loop.  As close to our book code as possible."""
@@ -91,6 +96,14 @@ class Engine:
             self.check_collisions()
             for o in self.objects:
                 o.update()
+
+            if now - self.lastSUpdate >= Settings.slowUpdateTicks:
+                self.lastSUpdate = now
+                for o in self.objects:
+                    try:
+                        o.slowUpdate()
+                    except:
+                        pass
 
             # Generate outputs
             #d.update()

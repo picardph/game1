@@ -25,6 +25,10 @@ class Updateable(abc.ABC):
     def update():
         pass
 
+    @abc.abstractmethod
+    def slowUpdate():
+        pass
+
 class UGameObject(GameObject, Updateable):
     """A game object that is updateable but not drawn."""
     pass

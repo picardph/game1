@@ -157,6 +157,9 @@ class Player(Character, Collidable):
         if self.setFlip == True:
             self.image = pygame.transform.flip(self.image, True, False)
 
+        
+
+    def slowUpdate(self):
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x

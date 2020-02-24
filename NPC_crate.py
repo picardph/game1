@@ -76,6 +76,8 @@ class Crate(Character, Collidable):
         self.rect.x = self.x
         self.rect.y = self.y
         #self.collisions = []
+    
+    def slowUpdate(self):
         for sprite in self.blocks:
             if sprite is not self:
                 self.collider.rect.x = sprite.x

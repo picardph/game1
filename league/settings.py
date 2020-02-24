@@ -29,6 +29,9 @@ class Settings:
     overlay_color = (0, 0, 0)
     overlay_location = (50, 580)
 
+    # Number of ticks between each call to slowUpdate
+    slowUpdateTicks = 20
+
 from enum import IntEnum
 class State(IntEnum):
     """State enumerates character states for readability.  Common states
