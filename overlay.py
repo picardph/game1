@@ -2,7 +2,7 @@ import league
 import pygame
 
 class Overlay(league.DUGameObject):
-    def __init__(self, player):
+    def __init__(self, player, tutorial=False):
         super().__init__(self)
         self._layer = 1000
         self.player = player
@@ -13,7 +13,7 @@ class Overlay(league.DUGameObject):
         self.hpRect = pygame.Rect(36, 2, self.hpBarWidth, 28)
         self.bgRect = pygame.Rect(36, 2, self.hpBarWidth, 28)
         
-        self.image = pygame.Surface([160, 32], pygame.SRCALPHA, 32)
+        self.image = pygame.Surface([500, 256], pygame.SRCALPHA, 32)
         self.image = self.image.convert_alpha()
         self.image.fill((100,100,100, 0))
 
@@ -26,6 +26,9 @@ class Overlay(league.DUGameObject):
         self.rect.x = 0
         self.rect.y = 0
         self.static = True
+        self.tutorialImage = pygame.image.load('assets/tutorial.png')
+        self.tutorial = tutorial
+            
 
     def update(self):
         pass
@@ -35,6 +38,8 @@ class Overlay(league.DUGameObject):
         pygame.draw.rect(self.image, self.bgColor, self.bgRect)
         pygame.draw.rect(self.image, self.hpColor, self.hpRect)
         self.image.blit(self.uiHealthFrame, (0, 0))
+        if self.tutorial:
+            self.image.blit(self.tutorialImage, (32, 64))
 
     def healthChange(self):
         # Method that updates health bar

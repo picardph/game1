@@ -121,6 +121,8 @@ class Scene(league.game_objects.Drawable):
 
         #Add overlay to scene
         self.overlay = Overlay(player)
+        if scene_index == 0:
+            self.overlay.tutorial = True
 
         engine.objects.append(self.overlay)
         engine.drawables.add(self.overlay)
