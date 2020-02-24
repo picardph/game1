@@ -20,7 +20,7 @@ class Ranged_Shot(Collidable):
         self.maxRange = 0
         self.moved = 0
         self.direction = direction
-        self.delta = self.direction * 500
+        self.delta = self.direction * 600
         self.offset = 16
         self.source = source
 
